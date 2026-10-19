@@ -2,12 +2,9 @@
 
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\PackagePaymentController;
-use App\Http\Controllers\PortfolioProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', fn () => response()->json(['status' => 'ok', 'service' => 'sansoft-api']));
-Route::get('/portfolio-projects', [PortfolioProjectController::class, 'index']);
-Route::post('/portfolio-projects/sync', [PortfolioProjectController::class, 'sync'])->middleware('throttle:60,1');
 Route::post('/contact', [LeadController::class, 'contact'])->middleware('throttle:10,1');
 Route::post('/quotes', [LeadController::class, 'quote'])->middleware('throttle:10,1');
 Route::get('/payments/config', [PackagePaymentController::class, 'config']);

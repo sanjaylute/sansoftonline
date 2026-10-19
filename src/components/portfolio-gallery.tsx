@@ -13,22 +13,7 @@ function websiteFor(title: string) {
 }
 
 export function PortfolioGallery() {
-  const [projects, setProjects] = useState<PortfolioProject[]>(portfolioProjects);
-  useEffect(() => {
-    const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-    fetch(`${api}/portfolio-projects`, { cache: 'no-store', headers: { Accept: 'application/json' } })
-      .then((response) => response.ok ? response.json() : null)
-      .then((payload) => {
-        if (!Array.isArray(payload?.data)) return;
-        const synced: PortfolioProject[] = payload.data.map((project: PortfolioProject & { domain?: string; id: number }) => ({
-          ...project,
-          id: 1_000_000 + project.id,
-          website: project.domain ? `https://${project.domain}` : undefined,
-        }));
-        setProjects([...synced, ...portfolioProjects]);
-      })
-      .catch(() => {});
-  }, []);
+  const projects = portfolioProjects;
   const categories = useMemo(() => [...new Set(projects.map((project) => project.category))].sort(), [projects]);
   const [category, setCategory] = useState('All industries');
   const [service, setService] = useState('All services');
@@ -101,7 +86,7 @@ export function PortfolioGallery() {
 function PortfolioCard({ project, index, onSelect }: { project: PortfolioProject; index: number; onSelect: () => void }) {
   return <article className={`portfolio-card${index===0?' portfolio-card-featured':''}`}>
     <button type="button" className="portfolio-card-image" onClick={onSelect} aria-label={`Open results for ${project.title}`}><span className="portfolio-image-frame"><img src={project.thumbnail} alt={`${project.title} portfolio thumbnail`} loading="lazy"/></span><span className="portfolio-card-open">View project <ArrowUpRight size={16}/></span></button>
-    <div className="portfolio-card-meta"><span>{project.category}</span><span>PROJECT {String(project.id).padStart(5,'0')}</span></div>
+    <div className="portfolio-card-meta"><span>{project.category}</span></div>
     <button type="button" className="portfolio-card-title" onClick={onSelect}>{project.title}</button>
   </article>;
 }

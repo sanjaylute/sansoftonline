@@ -25,12 +25,12 @@ export const packagePages: PackagePageData[] = [
   {
     slug: 'seo-packages', shortTitle: 'SEO', title: 'SEO Packages & Pricing', kicker: 'SEARCH ENGINE OPTIMIZATION',
     headline: ['Choose an SEO plan', 'built for steady growth.'],
-    description: 'Compare monthly SEO packages for businesses that want stronger search visibility, a healthier website and a practical path to more qualified traffic.',
-    priceNote: 'Prices and monthly scope are shown as listed on Sansoft’s current SEO package page.',
+    description: 'Compare one-time SEO packages for businesses that want stronger search visibility, a healthier website and a practical path to more qualified traffic.',
+    priceNote: 'Each package is charged once, with no automatic monthly renewal. Monthly deliverables are provided during the agreed service period.',
     tiers: [
-      { name: 'Basic SEO', price: '$99', cadence: '/ month', summary: 'A focused starting point for smaller websites and clear search priorities.', highlights: ['10 pages optimized', '10 target keywords', '20 first-month backlinks'], details: ['1 blog post each month', '40 backlinks per month from month two', 'Core setup, on-page and technical SEO deliverables'], },
-      { name: 'Standard SEO', price: '$199', cadence: '/ month', summary: 'Broader optimization for businesses ready to build momentum.', highlights: ['20 pages optimized', '25 target keywords', '40 first-month backlinks'], details: ['2 blog posts and 2 guest posts each month', '100 backlinks per month from month two', 'GEO for AI search included'], popular: true },
-      { name: 'Premium SEO', price: '$299', cadence: '/ month', summary: 'Comprehensive search support across more pages and opportunities.', highlights: ['35 pages optimized', '40 target keywords', '60 first-month backlinks'], details: ['2 blog posts and 3 guest posts each month', '150 backlinks per month from month two', 'GEO for AI search included'] },
+      { name: 'Basic SEO', price: '$99', cadence: ' USD · one-time', summary: 'A focused starting point for smaller websites and clear search priorities.', highlights: ['10 pages optimized', '10 target keywords', '20 first-month backlinks'], details: ['1 blog post each month', '40 backlinks per month from month two', 'Core setup, on-page and technical SEO deliverables'], },
+      { name: 'Standard SEO', price: '$199', cadence: ' USD · one-time', summary: 'Broader optimization for businesses ready to build momentum.', highlights: ['20 pages optimized', '25 target keywords', '40 first-month backlinks'], details: ['2 blog posts and 2 guest posts each month', '100 backlinks per month from month two', 'GEO for AI search included'], popular: true },
+      { name: 'Premium SEO', price: '$299', cadence: ' USD · one-time', summary: 'Comprehensive search support across more pages and opportunities.', highlights: ['35 pages optimized', '40 target keywords', '60 first-month backlinks'], details: ['2 blog posts and 3 guest posts each month', '150 backlinks per month from month two', 'GEO for AI search included'] },
     ],
     comparison: [
       { section: 'SEO Setup & Analysis', label: 'Initial ranking report', values: ['Included', 'Included', 'Included'] },
@@ -76,7 +76,7 @@ export const packagePages: PackagePageData[] = [
     ],
     faqs: [
       ['How do I choose an SEO package?', 'Consider the size of your website, the number of search topics you want to target and the level of technical support you need. We can review your site and help confirm the best fit before work begins.'],
-      ['Are SEO packages billed monthly?', 'The listed SEO package prices are monthly. We’ll confirm the selected scope and billing details with you before starting.'],
+      ['Are SEO packages billed monthly?', 'No. Each listed SEO package is a one-time charge with no automatic monthly renewal. Deliverables described as monthly are provided during the agreed service period, which we confirm before work begins.'],
       ['Can the package be adjusted for my website?', 'Yes. Share your website and priorities with our team. We can discuss how the listed package scope fits your goals and what additional work may be needed.'],
     ],
   },

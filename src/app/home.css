@@ -16,6 +16,16 @@ body:has(.home-page) .topbar{background:#2a2723;color:#f7eadd}body:has(.home-pag
 .home-page{font-size:16px}
 body:has(.home-page) .brand{gap:0;color:transparent;font-size:0;letter-spacing:0}
 body:has(.home-page) .brand-logo{display:block;width:178px;height:auto;max-height:37px;object-fit:contain;flex:none}
+
+/* Replace the abstract hero graphic with an editorial team photograph. */
+.hero-art{height:472px;padding:0;overflow:hidden;border-radius:18px 18px 72px 18px;background:#30241b;box-shadow:0 30px 70px #76390024}
+.hero-art:before{z-index:1;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,#17120a00 40%,#17120a9c 100%)}
+.hero-art-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center 48%}
+.hero-photo-caption{position:absolute;z-index:2;left:30px;right:30px;bottom:26px;color:#fff;display:flex;flex-direction:column;gap:8px}
+.hero-photo-caption span{color:#ffc077;font-size:9px;font-weight:800;letter-spacing:1.6px}
+.hero-photo-caption b{max-width:410px;font:700 21px/1.25 'Manrope',sans-serif;letter-spacing:-.4px}
+@media(max-width:950px){.hero-art{height:435px}}
+@media(max-width:650px){.hero-art{height:320px;padding:0;margin-right:10px;border-radius:14px 14px 48px 14px}.hero-art-photo{object-position:center 45%}.hero-photo-caption{left:18px;right:18px;bottom:18px;gap:5px}.hero-photo-caption span{font-size:7px;letter-spacing:1.2px}.hero-photo-caption b{font-size:16px}}
 body:has(.home-page) .brand:before{display:none!important}
 body:has(.home-page) .brand-light .brand-logo{filter:brightness(0) invert(1)}
 body:has(.home-page) .nav-links{font-size:14px;gap:28px}

@@ -66,6 +66,9 @@
 .people-alumni-card .people-employee-caption{padding:18px}
 .people-alumni-card .people-employee-caption>strong{font-size:19px}
 .people-alumni .people-roster-source{margin-top:17px}
+.people-person-placeholder{display:flex;align-items:center;justify-content:center;color:#ad5b12;background:radial-gradient(circle at 50% 43%,#fff8ef 0 24%,transparent 24.5%),linear-gradient(145deg,#f8e4cb,#efd1ad)!important}
+.people-person-placeholder svg{width:64px;height:64px;padding:14px;border:1px solid #e7c39c;border-radius:50%;background:#fffaf4;color:#c45d00;filter:drop-shadow(0 8px 12px #8b4c1717)}
+.people-alumni-photo.people-person-placeholder{height:250px}
 .people-recognition{padding:71px 0;background:#fff2e3;color:#211c18;border-top:1px solid #f1dfcd;border-bottom:1px solid #f1dfcd}
 .people-recognition-inner{position:relative}
 .people-recognition-inner>span{color:#b95b0a;font-size:9px;font-weight:850;letter-spacing:1.4px}

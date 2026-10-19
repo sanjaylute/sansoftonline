@@ -1,0 +1,84 @@
+.life-page{--life-ink:#241f1b;--life-muted:#756b61;--life-orange:#ed6b00;color:var(--life-ink);background:#fff}
+.life-wrap{width:min(1280px,calc(100% - 72px));margin-inline:auto}
+.life-kicker{display:inline-flex;align-items:center;gap:10px;color:#806c58;font-size:11px;font-weight:850;letter-spacing:1.7px}
+.life-kicker i{width:10px;height:10px;border-radius:50%;background:var(--life-orange);box-shadow:0 0 0 6px #ed6b0018}
+.life-hero{background:#fff8f0;padding-top:65px}
+.life-hero-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:75px;align-items:center;padding-bottom:64px}
+.life-hero-copy h1{font:800 clamp(54px,6.3vw,82px)/.99 'Manrope',sans-serif;letter-spacing:-5px;margin:26px 0 23px}
+.life-hero-copy h1 em,.life-intro h2 em,.life-culture h2 em,.life-final h2 em,.life-gallery-head h2 em{font-family:Georgia,serif;font-weight:500;color:var(--life-orange);letter-spacing:-3px}
+.life-hero-copy>p{max-width:540px;color:var(--life-muted);font-size:18px;line-height:1.8;margin:0}
+.life-link{display:inline-flex;align-items:center;gap:13px;margin-top:27px;color:#28211c;font-size:14px;font-weight:800}
+.life-link svg{color:var(--life-orange)}
+.life-facts{display:flex;gap:24px;margin-top:41px;padding-top:19px;border-top:1px solid #eadccc;color:#675c50}
+.life-facts span{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:750}
+.life-facts svg{color:var(--life-orange)}
+.life-hero-photo{height:480px;position:relative;overflow:hidden;border-radius:8px 8px 80px 8px;background:#312c27;box-shadow:0 25px 65px #3c251519}
+.life-hero-photo:after{content:'';position:absolute;inset:35% 0 0;background:linear-gradient(0deg,#17120edb,transparent)}
+.life-hero-photo>img{width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:saturate(.84)}
+.life-photo-label{position:absolute;z-index:1;bottom:31px;left:33px;color:#fff}
+.life-photo-label>span,.life-hero-year{font-size:9px;font-weight:850;letter-spacing:1.5px;color:#ffd09b}
+.life-photo-label>b{display:block;margin-top:11px;font:800 32px/1.07 'Manrope',sans-serif;letter-spacing:-1.2px}
+.life-hero-year{position:absolute;z-index:1;right:27px;top:25px;padding:10px 13px;border:1px solid #ffffff70;border-radius:30px;color:#fff;background:#1b171475;backdrop-filter:blur(8px)}
+.life-hero-bottom{border-top:1px solid #f0e0d0;background:#fffdf9}
+.life-hero-bottom>.life-wrap{min-height:63px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.life-hero-bottom span{color:#8a7866;font-size:9px;font-weight:850;letter-spacing:1.2px}
+.life-hero-bottom b{font-size:12px}
+.life-hero-bottom i{width:5px;height:5px;border-radius:50%;background:var(--life-orange)}
+.life-intro{display:grid;grid-template-columns:.9fr 1.1fr;gap:90px;padding-top:100px;padding-bottom:100px}
+.life-intro h2,.life-gallery-head h2,.life-culture h2{font:800 51px/1.08 'Manrope',sans-serif;letter-spacing:-2.5px;margin:20px 0 0}
+.life-intro>div+div{padding-top:4px}
+.life-intro>div+div p,.life-culture-grid>div+div>p{color:var(--life-muted);font-size:16px;line-height:1.85;margin:0 0 16px}
+.life-gallery-section{padding:89px 0 100px;background:#fff8f0}
+.life-gallery-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:30px}
+.life-gallery-head h2{margin-top:18px}
+.life-gallery-head>p{max-width:380px;color:var(--life-muted);font-size:15px;line-height:1.8;margin:0 0 7px}
+.life-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:25px}
+.life-filters button{border:1px solid #e7d7c7;border-radius:30px;background:#fff;padding:10px 16px;color:#62574c;font:750 11px 'Manrope',sans-serif;cursor:pointer;transition:.2s}
+.life-filters button:hover,.life-filters button.is-active{border-color:#ed6b00;background:#ed6b00;color:#fff}
+.life-gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}
+.life-gallery-card{display:block;min-width:0;padding:0;overflow:hidden;border:1px solid #eadccf;border-radius:8px;background:#fff;text-align:left;cursor:pointer;box-shadow:0 9px 24px #4c30100a;transition:transform .22s,box-shadow .22s}
+.life-gallery-card:hover{transform:translateY(-4px);box-shadow:0 17px 36px #4c301018}
+.life-gallery-card.is-featured{grid-column:span 2}
+.life-gallery-image{height:240px;position:relative;display:block;overflow:hidden;background:#322c26}
+.life-gallery-card.is-featured .life-gallery-image{height:315px}
+.life-gallery-image:after{content:'';position:absolute;inset:45% 0 0;background:linear-gradient(0deg,#14100ca6,transparent)}
+.life-gallery-image img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.life-gallery-card:hover .life-gallery-image img{transform:scale(1.035)}
+.life-gallery-image>i{position:absolute;z-index:1;top:15px;left:15px;padding:7px 10px;border-radius:20px;background:#fff;color:#473b30;font:800 10px 'Manrope',sans-serif;font-style:normal}
+.life-gallery-image>span{position:absolute;z-index:1;right:18px;bottom:15px;display:flex;align-items:center;gap:8px;color:#fff;font-size:9px;font-weight:850;letter-spacing:1.1px}
+.life-gallery-image>span svg{color:#ff8b13}
+.life-gallery-meta{display:flex;flex-direction:column;gap:7px;padding:17px 19px 20px}
+.life-gallery-meta small{color:#bd5900;font-size:9px;font-weight:850;letter-spacing:1.1px;text-transform:uppercase}
+.life-gallery-meta strong{font:750 18px 'Manrope',sans-serif;letter-spacing:-.3px}
+.life-gallery-meta>span{color:#796f64;font-size:12px;line-height:1.6}
+.life-culture{padding:94px 0;background:#fff}
+.life-culture-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:100px;align-items:center}
+.life-culture-mark{min-height:285px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;padding:28px;border-radius:8px 8px 70px 8px;background:#26221f;color:#fff}
+.life-culture-mark>svg{color:#ff8a10}
+.life-culture-mark>span{align-self:flex-end;color:#d6b18d;font-size:9px;font-weight:850;letter-spacing:1.2px}
+.life-culture-mark>strong{font:800 26px/1.25 'Manrope',sans-serif;letter-spacing:-.6px}
+.life-culture-mark>strong em{font-family:Georgia,serif;color:#ff8a10;font-weight:500}
+.life-culture h2{font-size:43px;margin:17px 0}
+.life-cta-link{display:inline-flex;align-items:center;gap:9px;margin-top:10px;color:#342a20;font-size:13px;font-weight:850}
+.life-cta-link svg{color:var(--life-orange)}
+.life-final{padding:69px 0;background:#fff1e2;border-top:1px solid #f1dfca}
+.life-final>.life-wrap{position:relative}
+.life-final>.life-wrap>span{font-size:9px;color:#885f3b;font-weight:850;letter-spacing:1.4px}
+.life-final h2{font:800 40px/1.08 'Manrope',sans-serif;letter-spacing:-1.6px;margin:14px 0}
+.life-final p{color:#71665b;font-size:14px;margin:0}
+.life-final a{position:absolute;right:0;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:22px;padding:16px 19px;border-radius:4px;background:#ed6b00;color:#241910;font-size:12px;font-weight:850}
+.life-final a svg{color:#fff}
+.life-lightbox{position:fixed;z-index:1000;inset:0;display:grid;place-items:center;padding:28px;background:#17130fdf;backdrop-filter:blur(8px)}
+.life-lightbox-panel{position:relative;width:min(980px,100%);max-height:min(90vh,850px);overflow:hidden;border:1px solid #6b5845;border-radius:9px;background:#201b16;color:#fff;box-shadow:0 30px 100px #0008}
+.life-lightbox-panel>img{display:block;width:100%;height:min(66vh,650px);object-fit:contain;background:#17130f}
+.life-lightbox-close,.life-lightbox-arrow{position:absolute;z-index:1;display:grid;place-items:center;border:1px solid #ffffff50;border-radius:50%;background:#17130fbd;color:#fff;cursor:pointer}
+.life-lightbox-close{width:42px;height:42px;top:14px;right:14px}
+.life-lightbox-arrow{width:42px;height:42px;top:45%;transform:translateY(-50%)}
+.life-lightbox-prev{left:14px}.life-lightbox-next{right:14px}
+.life-lightbox-caption{padding:15px 22px 20px}
+.life-lightbox-caption>span{color:#ffad55;font-size:9px;font-weight:850;letter-spacing:1.2px;text-transform:uppercase}
+.life-lightbox-caption>strong{display:block;margin-top:6px;font:750 18px 'Manrope',sans-serif}
+.life-lightbox-caption>p{margin:5px 0 0;color:#d7c8b9;font-size:12px}
+body:has(.life-page) .topbar{background:#25221f;color:#fff1e2;font-size:14px}body:has(.life-page) .nav-quote{background:#f58200;color:#241a10}body:has(.life-page) .nav-links>a:hover{color:#dc6900}body:has(.life-page) .site-footer{background:#24211e}body:has(.life-page) .site-footer .brand-logo{filter:none}body:has(.life-page) .footer-contact svg,body:has(.life-page) .site-footer a:hover{color:#ff9a25}
+@media(max-width:900px){.life-hero-grid{gap:35px}.life-hero-photo{height:420px}.life-intro{gap:50px}.life-culture-grid{gap:50px}}
+@media(max-width:650px){.life-wrap{width:calc(100% - 36px)}.life-hero{padding-top:47px}.life-hero-grid{grid-template-columns:1fr;gap:29px;padding-bottom:42px}.life-hero-copy h1{font-size:clamp(48px,12vw,64px);letter-spacing:-3.5px;margin:21px 0 17px}.life-hero-copy>p{font-size:15px;line-height:1.75}.life-facts{gap:14px;margin-top:28px}.life-facts span{font-size:10px}.life-hero-photo{height:330px;border-radius:6px 6px 55px 6px}.life-photo-label{left:19px;bottom:21px}.life-photo-label>b{font-size:26px}.life-hero-bottom>.life-wrap{min-height:58px;justify-content:flex-start;flex-wrap:wrap;padding-block:12px;gap:8px 11px}.life-hero-bottom span{width:100%;font-size:8px}.life-hero-bottom b{font-size:9px}.life-hero-bottom i{width:4px;height:4px}.life-intro{grid-template-columns:1fr;gap:23px;padding-top:64px;padding-bottom:65px}.life-intro h2,.life-gallery-head h2{font-size:39px;letter-spacing:-1.8px}.life-intro>div+div p,.life-culture-grid>div+div>p{font-size:14px}.life-gallery-section{padding:62px 0 68px}.life-gallery-head{display:block;margin-bottom:22px}.life-gallery-head>p{margin-top:17px;font-size:13px}.life-filters{gap:6px;margin-bottom:18px}.life-filters button{padding:9px 12px;font-size:10px}.life-gallery-grid{grid-template-columns:1fr;gap:14px}.life-gallery-card.is-featured{grid-column:auto}.life-gallery-image,.life-gallery-card.is-featured .life-gallery-image{height:230px}.life-gallery-meta{padding:14px 15px 16px}.life-gallery-meta strong{font-size:16px}.life-culture{padding:64px 0}.life-culture-grid{grid-template-columns:1fr;gap:29px}.life-culture-mark{min-height:220px;padding:21px}.life-culture h2{font-size:34px;letter-spacing:-1.5px}.life-final{padding:52px 0}.life-final h2{font-size:32px}.life-final p{font-size:13px;line-height:1.7}.life-final a{position:static;transform:none;margin-top:21px;padding:14px 16px;font-size:11px}.life-lightbox{padding:12px}.life-lightbox-panel>img{height:58vh}.life-lightbox-close{width:36px;height:36px;top:9px;right:9px}.life-lightbox-arrow{width:36px;height:36px}.life-lightbox-prev{left:8px}.life-lightbox-next{right:8px}}

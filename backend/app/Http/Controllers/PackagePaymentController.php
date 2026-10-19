@@ -1,0 +1,141 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+use Throwable;
+
+class PackagePaymentController
+{
+    private const PACKAGES = [
+        'SEO' => ['Basic SEO' => 99, 'Standard SEO' => 199, 'Premium SEO' => 299],
+        'Google Ads' => ['Basic Google Ads' => 100, 'Standard Google Ads' => 300, 'Premium Google Ads' => 550],
+        'Social Ads' => ['Basic Social Ads' => 65, 'Standard Social Ads' => 220, 'Premium Social Ads' => 400],
+        'Social Post Design' => ['Basic' => 10, 'Standard' => 55, 'Premium' => 150],
+    ];
+
+    public function config(): JsonResponse
+    {
+        return response()->json(['paypalClientId' => config('services.paypal.client_id')]);
+    }
+
+    public function razorpayOrder(Request $request): JsonResponse
+    {
+        $data = $this->validatedCustomer($request);
+        $key = config('services.razorpay.key');
+        $secret = config('services.razorpay.secret');
+        if (!$key || !$secret) return response()->json(['message' => 'Razorpay is not configured yet. Please contact Sansoft to purchase this package.'], 503);
+        $amount = $this->amount($data['package'], $data['tier']);
+        if ($amount instanceof JsonResponse) return $amount;
+
+        try {
+            $response = Http::withBasicAuth($key, $secret)->post('https://api.razorpay.com/v1/orders', [
+                'amount' => $amount * 100, 'currency' => 'USD', 'receipt' => (string) Str::uuid(),
+                'notes' => ['package' => $data['package'], 'tier' => $data['tier'], 'customer_email' => $data['email']],
+            ]);
+            if (!$response->successful() || !$response->json('id')) return response()->json(['message' => 'Razorpay could not create the order. Please try again.'], 502);
+            DB::table('package_payments')->insert($this->paymentRow('razorpay', $response->json('id'), $data, $amount));
+            return response()->json(['orderId' => $response->json('id'), 'amount' => $amount * 100, 'currency' => 'USD', 'key' => $key]);
+        } catch (Throwable $error) {
+            report($error);
+            return response()->json(['message' => 'Payment service is temporarily unavailable.'], 502);
+        }
+    }
+
+    public function verifyRazorpay(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'razorpay_order_id' => ['required', 'string', 'max:100'],
+            'razorpay_payment_id' => ['required', 'string', 'max:100'],
+            'razorpay_signature' => ['required', 'string', 'max:200'],
+        ]);
+        $payment = DB::table('package_payments')->where('gateway', 'razorpay')->where('gateway_order_id', $data['razorpay_order_id'])->first();
+        if (!$payment) return response()->json(['message' => 'Payment order not found.'], 404);
+        $expected = hash_hmac('sha256', $data['razorpay_order_id'].'|'.$data['razorpay_payment_id'], (string) config('services.razorpay.secret'));
+        if (!hash_equals($expected, $data['razorpay_signature'])) return response()->json(['message' => 'Payment signature could not be verified.'], 422);
+        DB::table('package_payments')->where('id', $payment->id)->update(['gateway_payment_id' => $data['razorpay_payment_id'], 'status' => 'paid', 'updated_at' => now()]);
+        return response()->json(['message' => 'Payment verified.']);
+    }
+
+    public function paypalOrder(Request $request): JsonResponse
+    {
+        $data = $this->validatedCustomer($request);
+        $amount = $this->amount($data['package'], $data['tier']);
+        if ($amount instanceof JsonResponse) return $amount;
+        try {
+            $token = $this->paypalToken();
+            if (!$token) return response()->json(['message' => 'PayPal is not configured yet. Please contact Sansoft to purchase this package.'], 503);
+            $response = Http::withToken($token)->post(rtrim(config('services.paypal.base_url'), '/').'/v2/checkout/orders', [
+                'intent' => 'CAPTURE', 'purchase_units' => [[
+                    'reference_id' => (string) Str::uuid(),
+                    'description' => $data['package'].' - '.$data['tier'],
+                    'custom_id' => $data['email'],
+                    'amount' => ['currency_code' => 'USD', 'value' => number_format($amount, 2, '.', '')],
+                ]],
+            ]);
+            if (!$response->successful() || !$response->json('id')) return response()->json(['message' => 'PayPal could not create the order. Please try again.'], 502);
+            DB::table('package_payments')->insert($this->paymentRow('paypal', $response->json('id'), $data, $amount));
+            return response()->json(['orderId' => $response->json('id')]);
+        } catch (Throwable $error) {
+            report($error);
+            return response()->json(['message' => 'Payment service is temporarily unavailable.'], 502);
+        }
+    }
+
+    public function capturePaypal(Request $request): JsonResponse
+    {
+        $data = $request->validate(['orderId' => ['required', 'string', 'max:100']]);
+        $payment = DB::table('package_payments')->where('gateway', 'paypal')->where('gateway_order_id', $data['orderId'])->first();
+        if (!$payment) return response()->json(['message' => 'Payment order not found.'], 404);
+        if ($payment->status === 'paid') return response()->json(['message' => 'Payment already confirmed.']);
+        try {
+            $token = $this->paypalToken();
+            if (!$token) return response()->json(['message' => 'PayPal is not configured.'], 503);
+            $response = Http::withToken($token)->withHeaders(['PayPal-Request-Id' => 'capture-'.$payment->gateway_order_id])->post(rtrim(config('services.paypal.base_url'), '/').'/v2/checkout/orders/'.$payment->gateway_order_id.'/capture');
+            $capture = $response->json('purchase_units.0.payments.captures.0');
+            $expected = number_format($payment->amount_minor, 2, '.', '');
+            if (!$response->successful() || $response->json('status') !== 'COMPLETED' || !$capture || $capture['status'] !== 'COMPLETED' || $capture['amount']['currency_code'] !== 'USD' || $capture['amount']['value'] !== $expected) {
+                return response()->json(['message' => 'PayPal payment could not be confirmed. Please contact Sansoft if the charge appears on your account.'], 422);
+            }
+            DB::table('package_payments')->where('id', $payment->id)->update(['gateway_payment_id' => $capture['id'], 'status' => 'paid', 'gateway_payload' => json_encode($response->json()), 'updated_at' => now()]);
+            return response()->json(['message' => 'Payment captured.']);
+        } catch (Throwable $error) {
+            report($error);
+            return response()->json(['message' => 'Payment confirmation is temporarily unavailable.'], 502);
+        }
+    }
+
+    private function validatedCustomer(Request $request): array
+    {
+        return $request->validate([
+            'package' => ['required', 'string', 'in:SEO,Google Ads,Social Ads,Social Post Design'],
+            'tier' => ['required', 'string', 'max:100'],
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email:rfc', 'max:190'],
+        ]);
+    }
+
+    private function amount(string $package, string $tier): int|JsonResponse
+    {
+        $amount = self::PACKAGES[$package][$tier] ?? null;
+        return $amount ?? response()->json(['message' => 'The selected package is unavailable.'], 422);
+    }
+
+    private function paymentRow(string $gateway, string $orderId, array $data, int $amount): array
+    {
+        return ['gateway' => $gateway, 'gateway_order_id' => $orderId, 'package' => $data['package'], 'tier' => $data['tier'], 'amount_minor' => $amount, 'currency' => 'USD', 'customer_name' => $data['name'], 'customer_email' => $data['email'], 'status' => 'pending', 'created_at' => now(), 'updated_at' => now()];
+    }
+
+    private function paypalToken(): ?string
+    {
+        $client = config('services.paypal.client_id');
+        $secret = config('services.paypal.secret');
+        if (!$client || !$secret) return null;
+        $response = Http::asForm()->withBasicAuth($client, $secret)->post(rtrim(config('services.paypal.base_url'), '/').'/v1/oauth2/token', ['grant_type' => 'client_credentials']);
+        return $response->successful() ? $response->json('access_token') : null;
+    }
+}

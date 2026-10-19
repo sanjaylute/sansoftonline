@@ -1,0 +1,37 @@
+.request-quote-page .page-hero{background:#fbf5ee}
+.request-quote-page .page-hero:after{border-color:#f0d8bf;box-shadow:0 0 0 38px #fff8ef,0 0 0 39px #f0d8bf,0 0 0 85px #fff8ef,0 0 0 86px #f0d8bf}
+.request-quote-page .eyebrow{color:#806850}
+.request-quote-page .eyebrow-dot{background:#ed6b00;box-shadow:0 0 0 5px #f9e5d2}
+.request-quote-page .page-hero h1 em,.request-quote-page .quote-aside h2 em{color:#ed6b00}
+.request-quote-page .quote-layout{padding-block:76px;align-items:center}
+.request-quote-page .quote-aside h2{font-size:48px;line-height:1.05}
+.request-quote-page .quote-aside>p{font-size:16px;max-width:420px}
+.request-quote-page .quote-promise{background:#fbf5ee;border:1px solid #efdfce;padding:22px;border-radius:5px}
+.request-quote-page .quote-promise>svg,.request-quote-page .quote-promise span svg{color:#ed6b00}
+.request-quote-page .quote-promise span{color:#61584f;font-size:13px}
+.request-quote-page .privacy-note{background:transparent;color:#746c65;font-size:12px}
+.request-quote-page .privacy-note svg{color:#ed6b00}
+.request-quote-page .form-card{border:1px solid #eadbca;border-radius:6px;box-shadow:0 22px 60px #34221610;padding:38px;background:#fff}
+.request-quote-page .form-card-heading>span{color:#c45a00}
+.request-quote-page .form-card-heading h3{font-size:25px}
+.request-quote-page .form-card-heading p{font-size:14px;color:#746c65}
+.request-quote-page .package-selection-note{margin:0 0 13px;padding:11px 13px;border:1px solid #efd9c3;border-radius:4px;background:#fff7ee;color:#6e4e30;font-size:12px}
+.request-quote-page .form-card form label{font-size:12px;color:#403932}
+.request-quote-page .form-card input,.request-quote-page .form-card select,.request-quote-page .form-card textarea{background:#fffdfa;border-color:#e7dbcf;color:#29231f;font-size:14px;padding:13px}
+.request-quote-page .form-card input:focus,.request-quote-page .form-card select:focus,.request-quote-page .form-card textarea:focus{border-color:#ed6b00;box-shadow:0 0 0 3px #ed6b0020}
+.request-quote-page .form-submit{background:#ed6b00;color:#211811}
+.request-quote-page .form-legal{font-size:10px;color:#82766b}
+.quote-faq{padding:75px 0;background:#fbf5ee;border-top:1px solid #f0e5d9;color:#25211e}
+.quote-faq-grid{display:grid;grid-template-columns:.78fr 1.22fr;gap:70px;align-items:start}
+.quote-faq-grid h2{margin:17px 0;font:750 clamp(36px,4vw,52px)/1.04 'Manrope',Arial,sans-serif;letter-spacing:-.05em}
+.quote-faq-grid h2 em{color:#ed6b00;font-family:Georgia,'Times New Roman',serif;font-weight:500}
+.quote-faq-grid>div>p{max-width:390px;color:#746c65;font-size:16px;line-height:1.7}
+.quote-faq-list{border-top:1px solid #e5d8cb}
+.quote-faq-list details{border-bottom:1px solid #e5d8cb}
+.quote-faq-list summary{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 0;cursor:pointer;list-style:none;font-size:16px;font-weight:750}
+.quote-faq-list summary::-webkit-details-marker{display:none}
+.quote-faq-list summary span{color:#ed6b00;font-size:23px;line-height:1;transition:transform .2s}
+.quote-faq-list details[open] summary span{transform:rotate(45deg)}
+.quote-faq-list details p{margin:0;padding:0 28px 18px 0;color:#746c65;font-size:14px;line-height:1.7}
+@media(max-width:850px){.request-quote-page .quote-layout{padding-block:58px}.quote-faq-grid{grid-template-columns:1fr;gap:22px}}
+@media(max-width:650px){.request-quote-page .quote-aside h2{font-size:39px}.request-quote-page .form-card{padding:24px 19px}.quote-faq{padding:55px 0}.quote-faq-grid{grid-template-columns:1fr;gap:22px}.quote-faq-list summary{font-size:14px}.quote-faq-list details p{font-size:13px}}

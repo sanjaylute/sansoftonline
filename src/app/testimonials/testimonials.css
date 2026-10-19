@@ -1,0 +1,14 @@
+.testimonials-page .page-hero{background:#fff7ee;border-bottom:1px solid #f0dfcc}
+.testimonials-page .page-hero:after{border-color:#f0d8bf;box-shadow:0 0 0 38px #fff8ef,0 0 0 39px #f0d8bf,0 0 0 85px #fff8ef,0 0 0 86px #f0d8bf}
+.testimonials-page .testimonial-grid-page{padding-block:76px}
+.testimonials-page .testimonial-card{border-color:#eadfd3;box-shadow:0 12px 30px #442a1208}
+.testimonials-page .testimonial-card>svg{color:#d96800}
+.testimonials-page .testimonial-card>p{color:#5f574f}
+.testimonials-page .testimonial-person{border-color:#eee3d8}
+.testimonials-page .testimonial-person>span{background:#fff0df;color:#b95700}
+.testimonials-page .testimonial-person>svg{color:#d96800}
+.testimonials-page .cta-band{background:#211e1b;color:#fff;border:1px solid #38302a}
+.testimonials-page .cta-band .eyebrow{color:#f5bc80}
+.testimonials-page .cta-band h2 em{color:#ff9a2d}
+.testimonials-page .cta-band .button-light{background:#f47b00;color:#211e1b}
+@media(max-width:650px){.testimonials-page .testimonial-grid-page{padding-block:45px}}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { ArrowUpRight, CheckCircle2, LoaderCircle } from 'lucide-react';
+import { apiUrl } from '@/lib/api-url';
 
 const serviceOptions = ['SEO & organic growth', 'Paid media & PPC', 'Social media marketing', 'Creative & design', 'Website development', 'Something else'];
 
@@ -41,7 +42,7 @@ export function LeadForm({ mode }: { mode: 'contact' | 'quote' }) {
     const data = Object.fromEntries(new FormData(form).entries());
     try {
       const endpoint = mode === 'quote' ? '/quotes' : '/contact';
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}${endpoint}`, {
+      const response = await fetch(`${apiUrl}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(data),
@@ -53,7 +54,10 @@ export function LeadForm({ mode }: { mode: 'contact' | 'quote' }) {
       setStatus('sent');
       form.reset();
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Unable to send your enquiry.');
+      const message = reason instanceof Error ? reason.message : '';
+      setError(/load failed|failed to fetch|networkerror/i.test(message)
+        ? 'Our enquiry service is temporarily unavailable. Please email sales@sansoftonline.com or call +91 82370 66600.'
+        : message || 'Unable to send your enquiry.');
       setStatus('error');
     }
   }

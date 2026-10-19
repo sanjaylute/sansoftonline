@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { ArrowUpRight, Check, LoaderCircle, X } from 'lucide-react';
+import { apiUrl } from '@/lib/api-url';
 
 declare global {
   interface Window {
@@ -11,7 +12,7 @@ declare global {
 }
 
 type Props = { packageName: string; price: string; service: string };
-const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const api = apiUrl;
 
 function checkoutError(error: unknown) {
   const message = error instanceof Error ? error.message : '';

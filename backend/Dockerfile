@@ -11,9 +11,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 COPY backend/composer.json backend/composer.lock ./
-RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --optimize-autoloader
+RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --no-scripts
 
 COPY backend/ ./
+RUN composer dump-autoload --no-dev --optimize
 COPY backend/docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY backend/docker/entrypoint.sh /usr/local/bin/sansoft-entrypoint
 

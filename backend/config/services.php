@@ -10,4 +10,8 @@ return [
         'secret' => env('PAYPAL_CLIENT_SECRET'),
         'base_url' => env('PAYPAL_BASE_URL', 'https://api-m.sandbox.paypal.com'),
     ],
+
+    'upstrait' => [
+        'portfolio_secret' => env('UPSTRAIT_PORTFOLIO_SYNC_SECRET'),
+    ],
 ];

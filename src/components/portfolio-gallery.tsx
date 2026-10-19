@@ -13,7 +13,23 @@ function websiteFor(title: string) {
 }
 
 export function PortfolioGallery() {
-  const categories = useMemo(() => [...new Set(portfolioProjects.map((project) => project.category))].sort(), []);
+  const [projects, setProjects] = useState<PortfolioProject[]>(portfolioProjects);
+  useEffect(() => {
+    const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+    fetch(`${api}/portfolio-projects`, { cache: 'no-store', headers: { Accept: 'application/json' } })
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload) => {
+        if (!Array.isArray(payload?.data)) return;
+        const synced: PortfolioProject[] = payload.data.map((project: PortfolioProject & { domain?: string; id: number }) => ({
+          ...project,
+          id: 1_000_000 + project.id,
+          website: project.domain ? `https://${project.domain}` : undefined,
+        }));
+        setProjects([...synced, ...portfolioProjects]);
+      })
+      .catch(() => {});
+  }, []);
+  const categories = useMemo(() => [...new Set(projects.map((project) => project.category))].sort(), [projects]);
   const [category, setCategory] = useState('All industries');
   const [service, setService] = useState('All services');
   const [query, setQuery] = useState('');
@@ -22,13 +38,13 @@ export function PortfolioGallery() {
 
   const filteredProjects = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return portfolioProjects.filter((project) => {
+    return projects.filter((project) => {
       const matchesCategory = category === 'All industries' || project.category === category;
       const matchesService = service === 'All services' || project.services?.includes(service) === true;
       const matchesQuery = !normalizedQuery || `${project.title} ${project.category} ${(project.services ?? []).join(' ')}`.toLowerCase().includes(normalizedQuery);
       return matchesCategory && matchesService && matchesQuery;
     });
-  }, [category, service, query]);
+  }, [projects, category, service, query]);
 
   useEffect(() => {
     setVisibleCount(pageSize);
@@ -50,7 +66,7 @@ export function PortfolioGallery() {
 
   const shownProjects = filteredProjects.slice(0, visibleCount);
   const additionalResults = selected?.results?.filter((result) => result.label.trim() && result.value.trim()) ?? [];
-  const selectedWebsite = selected ? websiteFor(selected.title) : null;
+  const selectedWebsite = selected?.website || (selected ? websiteFor(selected.title) : null);
 
   return <>
     <main className="portfolio-page">

@@ -7,6 +7,7 @@ export type PortfolioProject = {
   title: string;
   category: string;
   thumbnail: string;
+  website?: string;
   /** Add the verified service categories for this project in portfolio-data.json. */
   services?: string[];
   summary?: string;

@@ -23,8 +23,14 @@ Route::get('/health/mail', function () {
     }
 
     try {
-        Mail::raw('Laravel mailer delivery verification. Please disregard this temporary diagnostic message.', function ($mail): void {
-            $mail->to('sales@sansoftonline.com')->subject('Sansoft Laravel mailer verification');
+        Mail::raw('Laravel mailer contact notification verification. Please disregard this temporary diagnostic message.', function ($mail): void {
+            $mail->to('sales@sansoftonline.com')
+                ->replyTo('test@example.com', 'Sansoft Contact Form Test')
+                ->subject('Sansoft Laravel mailer verification');
+        });
+        Mail::raw('Laravel acknowledgement verification. Please disregard this temporary diagnostic message.', function ($mail): void {
+            $mail->to('test@example.com', 'Sansoft Contact Form Test')
+                ->subject('Sansoft acknowledgement verification');
         });
 
         return response()->json([...$status, 'delivery' => 'accepted']);

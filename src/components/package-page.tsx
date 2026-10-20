@@ -11,7 +11,7 @@ export function PackagePage({ data }: { data: PackagePageData }) {
       <aside className="package-hero-note"><span>STRAIGHTFORWARD PRICING</span><strong>Know what’s<br/>included.</strong><p>Choose a starting scope, compare the deliverables, and ask us to confirm the right fit for your goals.</p><div><Sparkles size={18}/><b>Clear scope. Practical next steps.</b></div></aside>
     </div></section>
 
-    <nav className="package-nav" aria-label="Browse service packages"><div className="package-wrap">{packagePages.map(page=><Link key={page.slug} href={`/${page.slug}/`} className={page.slug===data.slug?'is-current':''} aria-current={page.slug===data.slug?'page':undefined}>{page.shortTitle} <ArrowUpRight size={14}/></Link>)}</div></nav>
+    <nav className="package-nav" aria-label="Browse service packages"><div className="package-wrap">{packagePages.map(page=><Link key={page.slug} href={`/${page.slug}/`} className={page.slug===data.slug?'is-current':''} aria-current={page.slug===data.slug?'page':undefined}>{page.shortTitle} <ArrowUpRight size={14}/></Link>)}<Link href="/custom-service/">Custom Service <ArrowUpRight size={14}/></Link></div></nav>
 
     <section className="package-plans" id="plans"><div className="package-wrap">
       <div className="package-section-heading"><div><span className="package-kicker"><i/>THE PLANS</span><h2>Find your <em>starting point.</em></h2></div><p>{data.priceNote}</p></div>

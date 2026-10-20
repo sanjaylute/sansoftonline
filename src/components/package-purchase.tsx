@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-type Props = { packageName: string; price: string; service: string };
+type Props = { packageName: string; price: string; service: string; custom?: boolean };
 const api = apiUrl;
 
 function checkoutError(error: unknown) {
@@ -35,7 +35,7 @@ function loadScript(src: string) {
   });
 }
 
-export function PackagePurchase({ packageName, price, service }: Props) {
+export function PackagePurchase({ packageName, price, service, custom = false }: Props) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -43,6 +43,10 @@ export function PackagePurchase({ packageName, price, service }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [customAmount, setCustomAmount] = useState('');
+  const [comments, setComments] = useState('');
+  const amount = customAmount ? `$${customAmount}` : price;
+  const orderDetails = { package: service, tier: packageName, name, email, ...(custom ? { customAmount: Number(customAmount), comments } : {}) };
 
   async function reportFailure(gateway: 'razorpay' | 'paypal', orderId: string | undefined, reason: string) {
     if (!orderId) return;
@@ -67,7 +71,8 @@ export function PackagePurchase({ packageName, price, service }: Props) {
         createOrder: async () => {
           setError(''); setBusy(true);
           try {
-            const response = await fetch(`${api}/payments/paypal/order`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ package: service, tier: packageName, name, email }) });
+            if (custom && (!customAmount || !comments.trim())) throw new Error('Enter the custom amount and service details before paying.');
+            const response = await fetch(`${api}/payments/paypal/order`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(orderDetails) });
             const data = await response.json(); if (!response.ok) throw new Error(data.message || 'Could not start PayPal checkout.');
             activeOrderId = data.orderId;
             return data.orderId;
@@ -88,14 +93,14 @@ export function PackagePurchase({ packageName, price, service }: Props) {
       }).render(target);
     })();
     return () => { cancelled = true; };
-  }, [open, gateway, packageName, service, name, email]);
+  }, [open, gateway, packageName, service, name, email, custom, customAmount, comments]);
 
   async function payRazorpay(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(''); setSuccess(''); setBusy(true);
     try {
       const loaded = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
       if (!loaded) throw new Error('Razorpay checkout could not be loaded.');
-      const response = await fetch(`${api}/payments/razorpay/order`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ package: service, tier: packageName, name, email }) });
+      const response = await fetch(`${api}/payments/razorpay/order`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(orderDetails) });
       const order = await response.json(); if (!response.ok) throw new Error(order.message || 'Could not start Razorpay checkout.');
       if (!window.Razorpay) throw new Error('Razorpay checkout could not be loaded.');
       const checkout = new window.Razorpay({ key: order.key, amount: order.amount, currency: order.currency, name: 'Sansoft', description: `${service} · ${packageName}`, order_id: order.orderId, prefill: { name, email }, theme: { color: '#f57a00' }, handler: async (result: Record<string, string>) => {
@@ -117,8 +122,9 @@ export function PackagePurchase({ packageName, price, service }: Props) {
     <button type="button" className="package-plan-cta package-purchase-trigger" onClick={() => { setOpen(true); setError(''); setSuccess(''); }}>Purchase this package <ArrowUpRight size={17}/></button>
     {open && <div className="purchase-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><section className="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="purchase-title"><button className="purchase-close" aria-label="Close payment window" onClick={() => setOpen(false)}><X size={20}/></button>
       {success ? <div className="purchase-success"><span><Check size={24}/></span><h2 id="purchase-title">Thank you.</h2><p>{success}</p><button onClick={() => setOpen(false)}>Close</button></div> : <>
-        <span className="package-kicker"><i/>SECURE CHECKOUT</span><h2 id="purchase-title">Purchase {packageName}</h2><p className="purchase-summary">{service} package <strong>{price} USD</strong></p>
+        <span className="package-kicker"><i/>SECURE CHECKOUT</span><h2 id="purchase-title">Purchase {packageName}</h2><p className="purchase-summary">{service} package <strong>{custom ? `${amount} USD` : `${price} USD`}</strong></p>
         <form onSubmit={payRazorpay} className="purchase-form"><label>Your name<input required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}/></label><label>Email address<input required type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}/></label>
+          {custom && <><label>Custom amount (USD)<input required type="number" min="1" max="100000" step="1" inputMode="numeric" value={customAmount} onChange={(e) => setCustomAmount(e.target.value)}/></label><label>Service details / comments<textarea required maxLength={2000} value={comments} onChange={(e) => setComments(e.target.value)} placeholder="Tell us what this payment is for."/></label></>}
           <div className="purchase-gateway-choice"><button type="button" className={gateway === 'razorpay' ? 'selected' : ''} onClick={() => { setGateway('razorpay'); setError(''); }}>Razorpay <small>Cards, UPI & more</small></button><button type="button" className={gateway === 'paypal' ? 'selected' : ''} onClick={() => { setGateway('paypal'); setError(''); }}>PayPal <small>Pay securely with PayPal</small></button></div>
           {gateway === 'razorpay' ? <button className="purchase-pay" disabled={busy}>{busy && <LoaderCircle size={17} className="purchase-spinner"/>}Continue to Razorpay <ArrowUpRight size={17}/></button> : <div id="paypal-buttons"/>}
         </form>{busy && gateway === 'paypal' && <p className="purchase-loading">Preparing secure checkout…</p>}{error && <p className="purchase-error" role="alert">{error}</p>}<p className="purchase-legal">Payments are processed securely by the selected payment provider.</p>

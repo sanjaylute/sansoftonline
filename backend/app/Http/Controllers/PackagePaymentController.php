@@ -31,7 +31,7 @@ class PackagePaymentController
         $key = config('services.razorpay.key');
         $secret = config('services.razorpay.secret');
         if (!$key || !$secret) return response()->json(['message' => 'Razorpay is not configured yet. Please contact Sansoft to purchase this package.'], 503);
-        $amount = $this->amount($data['package'], $data['tier']);
+        $amount = $this->amount($data);
         if ($amount instanceof JsonResponse) return $amount;
 
         try {
@@ -69,7 +69,7 @@ class PackagePaymentController
     public function paypalOrder(Request $request): JsonResponse
     {
         $data = $this->validatedCustomer($request);
-        $amount = $this->amount($data['package'], $data['tier']);
+        $amount = $this->amount($data);
         if ($amount instanceof JsonResponse) return $amount;
         try {
             $token = $this->paypalToken();
@@ -137,22 +137,25 @@ class PackagePaymentController
     private function validatedCustomer(Request $request): array
     {
         return $request->validate([
-            'package' => ['required', 'string', 'in:SEO,Google Ads,Social Ads,Social Post Design'],
+            'package' => ['required', 'string', 'in:SEO,Google Ads,Social Ads,Social Post Design,Custom Service'],
             'tier' => ['required', 'string', 'max:100'],
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'email:rfc', 'max:190'],
+            'customAmount' => ['nullable', 'integer', 'min:1', 'max:100000', 'required_if:package,Custom Service'],
+            'comments' => ['nullable', 'string', 'max:2000', 'required_if:package,Custom Service'],
         ]);
     }
 
-    private function amount(string $package, string $tier): int|JsonResponse
+    private function amount(array $data): int|JsonResponse
     {
-        $amount = self::PACKAGES[$package][$tier] ?? null;
+        if ($data['package'] === 'Custom Service') return (int) $data['customAmount'];
+        $amount = self::PACKAGES[$data['package']][$data['tier']] ?? null;
         return $amount ?? response()->json(['message' => 'The selected package is unavailable.'], 422);
     }
 
     private function paymentRow(string $gateway, string $orderId, array $data, int $amount): array
     {
-        return ['gateway' => $gateway, 'gateway_order_id' => $orderId, 'package' => $data['package'], 'tier' => $data['tier'], 'amount_minor' => $amount, 'currency' => 'USD', 'customer_name' => $data['name'], 'customer_email' => $data['email'], 'status' => 'pending', 'created_at' => now(), 'updated_at' => now()];
+        return ['gateway' => $gateway, 'gateway_order_id' => $orderId, 'package' => $data['package'], 'tier' => $data['tier'], 'amount_minor' => $amount, 'currency' => 'USD', 'customer_name' => $data['name'], 'customer_email' => $data['email'], 'comments' => $data['comments'] ?? null, 'status' => 'pending', 'created_at' => now(), 'updated_at' => now()];
     }
 
     private function markFailed(object $payment, string $reason, mixed $payload = null): void
@@ -179,6 +182,7 @@ class PackagePaymentController
             'Amount: '.$amount,
             'Gateway: '.ucfirst($payment->gateway),
             'Order ID: '.$payment->gateway_order_id,
+            $payment->comments ? 'Comments: '.$payment->comments : null,
             $transactionId ? 'Payment ID: '.$transactionId : null,
             $reason ? 'Reason: '.$reason : null,
         ]));

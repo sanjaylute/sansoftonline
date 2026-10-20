@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { ArrowUpRight, ChevronDown, Code2, FileText, Gauge, Image as ImageIcon, Link2, Mail, MapPin, Megaphone, Menu, Network, Palette, Phone, Search, ShieldCheck, ShoppingBag, Sparkles, Target, Users, Video, X } from 'lucide-react';
 import { navLinks, services, serviceHref } from '@/lib/content';
+import { blogPosts } from '@/lib/blog-data';
 
 const serviceGroups = [
   { name: 'SEO & search', icon: Search, description: 'Build lasting visibility and get found by the right people.', match: (title: string, slug: string) => /seo|citation|business profile/i.test(`${title} ${slug}`) },
@@ -104,6 +105,10 @@ const pageLabels: Record<string, string> = {
 function pageLabel(pathname: string) {
   const cleanPath = pathname.replace(/\/$/, '') || '/';
   if (cleanPath === '/') return null;
+  const slug = cleanPath.split('/').filter(Boolean).at(-1) || '';
+  // Article pages render their own category, title and metadata. A global page
+  // title here would duplicate the article heading above its hero.
+  if (blogPosts.some(post => post.slug === slug)) return null;
   const service = services.find(item => serviceHref(item.slug).replace(/\/$/, '') === cleanPath || `/services/${item.slug}` === cleanPath);
   if (service) return service.title;
   if (pageLabels[cleanPath]) return pageLabels[cleanPath];

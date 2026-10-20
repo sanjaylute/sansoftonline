@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Lead;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 
 class LeadController
 {
@@ -19,6 +21,7 @@ class LeadController
             'subject' => ['required', 'string', 'max:180'],
             'message' => ['required', 'string', 'max:5000'],
         ]);
+        $this->verifyTurnstile($request, 'contact');
         Lead::create([...$validated, 'type' => 'contact']);
         try {
             Mail::raw(implode("\n", [
@@ -58,6 +61,7 @@ class LeadController
             'budget' => ['nullable', 'string', 'max:120'],
             'message' => ['required', 'string', 'max:5000'],
         ]);
+        $this->verifyTurnstile($request, 'quote');
         Lead::create([...$validated, 'type' => 'quote']);
 
         try {
@@ -88,5 +92,39 @@ class LeadController
         }
 
         return response()->json(['message' => 'Thank you. Your quote request has been received.'], 201);
+    }
+
+    private function verifyTurnstile(Request $request, string $action): void
+    {
+        $secret = config('services.turnstile.secret_key');
+        if (! $secret) {
+            return;
+        }
+
+        $token = $request->validate([
+            'turnstile_token' => ['required', 'string', 'max:2048'],
+        ])['turnstile_token'];
+
+        try {
+            $result = Http::asForm()
+                ->timeout(10)
+                ->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+                    'secret' => $secret,
+                    'response' => $token,
+                    'remoteip' => $request->ip(),
+                ])
+                ->json();
+        } catch (\Throwable $exception) {
+            Log::warning('Cloudflare Turnstile could not be verified.', ['exception' => $exception->getMessage()]);
+            throw ValidationException::withMessages([
+                'turnstile_token' => ['Security verification is unavailable. Please try again shortly.'],
+            ]);
+        }
+
+        if (! ($result['success'] ?? false) || (($result['action'] ?? $action) !== $action)) {
+            throw ValidationException::withMessages([
+                'turnstile_token' => ['Security verification failed. Please try again.'],
+            ]);
+        }
     }
 }

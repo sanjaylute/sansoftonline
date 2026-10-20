@@ -10,5 +10,8 @@ return [
         'secret' => env('PAYPAL_CLIENT_SECRET'),
         'base_url' => env('PAYPAL_BASE_URL', 'https://api-m.sandbox.paypal.com'),
     ],
+    'turnstile' => [
+        'secret_key' => env('TURNSTILE_SECRET_KEY'),
+    ],
 
 ];

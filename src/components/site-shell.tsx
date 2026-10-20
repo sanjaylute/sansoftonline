@@ -91,9 +91,32 @@ function ServiceIcon({ title, slug }: { title: string; slug: string }) {
   return <Icon className="nav-service-icon" size={14} aria-hidden="true"/>;
 }
 
+const pageLabels: Record<string, string> = {
+  '/about-us': 'About Us', '/our-people': 'Our People', '/life-at-sansoft': 'Life @ Sansoft',
+  '/our-portfolio': 'Our Portfolio', '/contact-us': 'Contact Us', '/request-quote': 'Request a Quote',
+  '/privacy-policy': 'Privacy Policy', '/terms-and-conditions': 'Terms & Conditions',
+  '/seo-packages': 'SEO Packages', '/google-ads-packages': 'Google Ads Packages',
+  '/social-media-ads-packages': 'Social Media Ads Packages',
+  '/social-media-posts-design-packages': 'Social Media Posts Design Packages',
+  '/custom-service': 'Custom Service', '/blog': 'Insights', '/sitemap': 'Sitemap',
+};
+
+function pageLabel(pathname: string) {
+  const cleanPath = pathname.replace(/\/$/, '') || '/';
+  if (cleanPath === '/') return null;
+  const service = services.find(item => serviceHref(item.slug).replace(/\/$/, '') === cleanPath || `/services/${item.slug}` === cleanPath);
+  if (service) return service.title;
+  if (pageLabels[cleanPath]) return pageLabels[cleanPath];
+  const lastSegment = decodeURIComponent(cleanPath.split('/').filter(Boolean).at(-1) || '');
+  const acronyms: Record<string, string> = { seo: 'SEO', ppc: 'PPC', ai: 'AI', nft: 'NFT', geo: 'GEO', cms: 'CMS', xml: 'XML', url: 'URL', ads: 'Ads' };
+  return lastSegment.split('-').map(word => acronyms[word.toLowerCase()] || `${word.charAt(0).toUpperCase()}${word.slice(1)}`).join(' ');
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const pathname = usePathname();
+  const currentPage = pageLabel(pathname);
   const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeNavigation = () => { setOpen(false); setServicesOpen(false); };
   const cancelMenuClose = () => { if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current); menuCloseTimer.current = null; };
@@ -123,6 +146,7 @@ export function SiteHeader() {
       </nav>
       <button className="menu-toggle" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(value => { if (value) setServicesOpen(false); return !value; })}>{open ? <X/> : <Menu/>}</button>
     </div></header>
+    {currentPage && <section className="site-page-title" aria-label="Current page"><div className="wrap"><span>HOME <i/> {currentPage.toUpperCase()}</span><p>{currentPage}</p></div></section>}
   </>;
 }
 

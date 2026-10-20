@@ -12,3 +12,4 @@ Route::post('/payments/razorpay/order', [PackagePaymentController::class, 'razor
 Route::post('/payments/razorpay/verify', [PackagePaymentController::class, 'verifyRazorpay'])->middleware('throttle:20,1');
 Route::post('/payments/paypal/order', [PackagePaymentController::class, 'paypalOrder'])->middleware('throttle:10,1');
 Route::post('/payments/paypal/capture', [PackagePaymentController::class, 'capturePaypal'])->middleware('throttle:20,1');
+Route::post('/payments/failure', [PackagePaymentController::class, 'paymentFailed'])->middleware('throttle:20,1');

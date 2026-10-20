@@ -6,7 +6,7 @@ import { apiUrl } from '@/lib/api-url';
 
 declare global {
   interface Window {
-    Razorpay?: new (options: Record<string, unknown>) => { open: () => void };
+    Razorpay?: new (options: Record<string, unknown>) => { open: () => void; on: (event: string, callback: (response: Record<string, unknown>) => void) => void };
     paypal?: { Buttons: (options: Record<string, unknown>) => { render: (target: HTMLElement) => Promise<void> } };
   }
 }
@@ -44,6 +44,13 @@ export function PackagePurchase({ packageName, price, service }: Props) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  async function reportFailure(gateway: 'razorpay' | 'paypal', orderId: string | undefined, reason: string) {
+    if (!orderId) return;
+    try {
+      await fetch(`${api}/payments/failure`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ gateway, orderId, reason }) });
+    } catch { /* The provider error remains visible even if reporting is unavailable. */ }
+  }
+
   useEffect(() => {
     if (!open || gateway !== 'paypal') return;
     let cancelled = false;
@@ -55,12 +62,14 @@ export function PackagePurchase({ packageName, price, service }: Props) {
       const target = document.getElementById('paypal-buttons');
       if (!target) return;
       target.replaceChildren();
+      let activeOrderId: string | undefined;
       await window.paypal.Buttons({
         createOrder: async () => {
           setError(''); setBusy(true);
           try {
             const response = await fetch(`${api}/payments/paypal/order`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ package: service, tier: packageName, name, email }) });
             const data = await response.json(); if (!response.ok) throw new Error(data.message || 'Could not start PayPal checkout.');
+            activeOrderId = data.orderId;
             return data.orderId;
           } catch (e) { setError(checkoutError(e)); throw e; }
           finally { setBusy(false); }
@@ -71,10 +80,11 @@ export function PackagePurchase({ packageName, price, service }: Props) {
             const response = await fetch(`${api}/payments/paypal/capture`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ orderId: data.orderID }) });
             const result = await response.json(); if (!response.ok) throw new Error(result.message || 'Payment confirmation failed.');
             setSuccess('Payment received. Sansoft will contact you shortly to begin your package.');
-    } catch (e) { setError(checkoutError(e)); }
+    } catch (e) { await reportFailure('paypal', activeOrderId, e instanceof Error ? e.message : 'PayPal payment confirmation failed.'); setError(checkoutError(e)); }
           finally { setBusy(false); }
         },
-        onError: () => setError('PayPal could not complete the payment. Please try again.'),
+        onCancel: (data: { orderID?: string }) => { void reportFailure('paypal', data.orderID || activeOrderId, 'Checkout was cancelled before payment.'); },
+        onError: () => { void reportFailure('paypal', activeOrderId, 'PayPal could not complete the payment.'); setError('PayPal could not complete the payment. Please try again.'); },
       }).render(target);
     })();
     return () => { cancelled = true; };
@@ -91,9 +101,13 @@ export function PackagePurchase({ packageName, price, service }: Props) {
       const checkout = new window.Razorpay({ key: order.key, amount: order.amount, currency: order.currency, name: 'Sansoft', description: `${service} · ${packageName}`, order_id: order.orderId, prefill: { name, email }, theme: { color: '#f57a00' }, handler: async (result: Record<string, string>) => {
         const verified = await fetch(`${api}/payments/razorpay/verify`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(result) });
         const confirmation = await verified.json();
-        if (!verified.ok) { setError(confirmation.message || 'Payment verification failed.'); return; }
+        if (!verified.ok) { await reportFailure('razorpay', order.orderId, confirmation.message || 'Payment verification failed.'); setError(confirmation.message || 'Payment verification failed.'); return; }
         setSuccess('Payment received. Sansoft will contact you shortly to begin your package.');
       } });
+      checkout.on('payment.failed', (response) => {
+        const details = response.error as { description?: string } | undefined;
+        void reportFailure('razorpay', order.orderId, details?.description || 'Razorpay payment failed.');
+      });
       checkout.open();
     } catch (e) { setError(checkoutError(e)); }
     finally { setBusy(false); }

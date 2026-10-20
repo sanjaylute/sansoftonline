@@ -6,6 +6,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -57,7 +59,10 @@ class PackagePaymentController
         if (!$payment) return response()->json(['message' => 'Payment order not found.'], 404);
         $expected = hash_hmac('sha256', $data['razorpay_order_id'].'|'.$data['razorpay_payment_id'], (string) config('services.razorpay.secret'));
         if (!hash_equals($expected, $data['razorpay_signature'])) return response()->json(['message' => 'Payment signature could not be verified.'], 422);
-        DB::table('package_payments')->where('id', $payment->id)->update(['gateway_payment_id' => $data['razorpay_payment_id'], 'status' => 'paid', 'updated_at' => now()]);
+        $updated = DB::table('package_payments')->where('id', $payment->id)->where('status', '!=', 'paid')->update([
+            'gateway_payment_id' => $data['razorpay_payment_id'], 'status' => 'paid', 'updated_at' => now(),
+        ]);
+        if ($updated) $this->sendPaymentEmail($payment, 'paid', $data['razorpay_payment_id']);
         return response()->json(['message' => 'Payment verified.']);
     }
 
@@ -99,14 +104,34 @@ class PackagePaymentController
             $capture = $response->json('purchase_units.0.payments.captures.0');
             $expected = number_format($payment->amount_minor, 2, '.', '');
             if (!$response->successful() || $response->json('status') !== 'COMPLETED' || !$capture || $capture['status'] !== 'COMPLETED' || $capture['amount']['currency_code'] !== 'USD' || $capture['amount']['value'] !== $expected) {
+                $this->markFailed($payment, 'PayPal capture could not be confirmed.', $response->json());
                 return response()->json(['message' => 'PayPal payment could not be confirmed. Please contact Sansoft if the charge appears on your account.'], 422);
             }
-            DB::table('package_payments')->where('id', $payment->id)->update(['gateway_payment_id' => $capture['id'], 'status' => 'paid', 'gateway_payload' => json_encode($response->json()), 'updated_at' => now()]);
+            $updated = DB::table('package_payments')->where('id', $payment->id)->where('status', '!=', 'paid')->update([
+                'gateway_payment_id' => $capture['id'], 'status' => 'paid', 'gateway_payload' => json_encode($response->json()), 'updated_at' => now(),
+            ]);
+            if ($updated) $this->sendPaymentEmail($payment, 'paid', $capture['id']);
             return response()->json(['message' => 'Payment captured.']);
         } catch (Throwable $error) {
             report($error);
+            $this->markFailed($payment, 'PayPal payment capture request failed.');
             return response()->json(['message' => 'Payment confirmation is temporarily unavailable.'], 502);
         }
+    }
+
+    public function paymentFailed(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'gateway' => ['required', 'in:razorpay,paypal'],
+            'orderId' => ['required', 'string', 'max:100'],
+            'reason' => ['nullable', 'string', 'max:500'],
+        ]);
+        $payment = DB::table('package_payments')->where('gateway', $data['gateway'])->where('gateway_order_id', $data['orderId'])->first();
+        if (!$payment) return response()->json(['message' => 'Payment order not found.'], 404);
+        if ($payment->status === 'paid') return response()->json(['message' => 'Payment already confirmed.']);
+
+        $this->markFailed($payment, $data['reason'] ?? 'Payment was not completed.');
+        return response()->json(['message' => 'Payment failure recorded.']);
     }
 
     private function validatedCustomer(Request $request): array
@@ -128,6 +153,49 @@ class PackagePaymentController
     private function paymentRow(string $gateway, string $orderId, array $data, int $amount): array
     {
         return ['gateway' => $gateway, 'gateway_order_id' => $orderId, 'package' => $data['package'], 'tier' => $data['tier'], 'amount_minor' => $amount, 'currency' => 'USD', 'customer_name' => $data['name'], 'customer_email' => $data['email'], 'status' => 'pending', 'created_at' => now(), 'updated_at' => now()];
+    }
+
+    private function markFailed(object $payment, string $reason, mixed $payload = null): void
+    {
+        $updated = DB::table('package_payments')->where('id', $payment->id)->where('status', 'pending')->update([
+            'status' => 'failed',
+            'gateway_payload' => json_encode(['reason' => $reason, 'payload' => $payload]),
+            'updated_at' => now(),
+        ]);
+        if ($updated) $this->sendPaymentEmail($payment, 'failed', null, $reason);
+    }
+
+    private function sendPaymentEmail(object $payment, string $status, ?string $transactionId = null, ?string $reason = null): void
+    {
+        $amount = '$'.number_format($payment->amount_minor, 2).' '.$payment->currency;
+        $isPaid = $status === 'paid';
+        $subject = $isPaid ? 'Payment received: '.$payment->tier : 'Payment not completed: '.$payment->tier;
+        $adminMessage = implode("\n", array_filter([
+            $isPaid ? 'A package payment was completed on the Sansoft website.' : 'A package checkout was not completed on the Sansoft website.',
+            '',
+            'Customer: '.$payment->customer_name,
+            'Email: '.$payment->customer_email,
+            'Package: '.$payment->package.' — '.$payment->tier,
+            'Amount: '.$amount,
+            'Gateway: '.ucfirst($payment->gateway),
+            'Order ID: '.$payment->gateway_order_id,
+            $transactionId ? 'Payment ID: '.$transactionId : null,
+            $reason ? 'Reason: '.$reason : null,
+        ]));
+        $customerMessage = $isPaid
+            ? "Hi {$payment->customer_name},\n\nThank you. We have received your payment of {$amount} for the {$payment->tier} {$payment->package} package. Our team will contact you shortly with the next steps.\n\nOrder reference: {$payment->gateway_order_id}\n\nRegards,\nSansoft Web Technologies\nsales@sansoftonline.com"
+            : "Hi {$payment->customer_name},\n\nYour payment for the {$payment->tier} {$payment->package} package was not completed, and no confirmed payment has been recorded by Sansoft. You can try checkout again or contact us at sales@sansoftonline.com for help.\n\nOrder reference: {$payment->gateway_order_id}\n\nRegards,\nSansoft Web Technologies\nsales@sansoftonline.com";
+
+        try {
+            Mail::raw($adminMessage, function ($mail) use ($subject): void {
+                $mail->to('sales@sansoftonline.com')->subject($subject);
+            });
+            Mail::raw($customerMessage, function ($mail) use ($payment, $subject): void {
+                $mail->to($payment->customer_email, $payment->customer_name)->subject($subject);
+            });
+        } catch (Throwable $error) {
+            Log::error('Unable to send package payment notification emails.', ['payment_id' => $payment->id, 'exception' => $error->getMessage()]);
+        }
     }
 
     private function paypalToken(): ?string

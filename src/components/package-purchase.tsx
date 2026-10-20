@@ -119,7 +119,7 @@ export function PackagePurchase({ packageName, price, service, custom = false }:
   }
 
   return <>
-    <button type="button" className="package-plan-cta package-purchase-trigger" onClick={() => { setOpen(true); setError(''); setSuccess(''); }}>Purchase this package <ArrowUpRight size={17}/></button>
+    <button type="button" className="package-plan-cta package-purchase-trigger" onClick={() => { setOpen(true); setError(''); setSuccess(''); }}>{custom ? 'Continue to secure payment' : 'Purchase this package'} <ArrowUpRight size={17}/></button>
     {open && <div className="purchase-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><section className="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="purchase-title"><button className="purchase-close" aria-label="Close payment window" onClick={() => setOpen(false)}><X size={20}/></button>
       {success ? <div className="purchase-success"><span><Check size={24}/></span><h2 id="purchase-title">Thank you.</h2><p>{success}</p><button onClick={() => setOpen(false)}>Close</button></div> : <>
         <span className="package-kicker"><i/>SECURE CHECKOUT</span><h2 id="purchase-title">Purchase {packageName}</h2><p className="purchase-summary">{service} package <strong>{custom ? `${amount} USD` : `${price} USD`}</strong></p>

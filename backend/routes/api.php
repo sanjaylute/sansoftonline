@@ -5,6 +5,16 @@ use App\Http\Controllers\PackagePaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', fn () => response()->json(['status' => 'ok', 'service' => 'sansoft-api']));
+Route::get('/health/mail', fn () => response()->json([
+    'mailer' => config('mail.default'),
+    'smtp' => [
+        'host_configured' => filled(config('mail.mailers.smtp.host')),
+        'port' => config('mail.mailers.smtp.port'),
+        'scheme' => config('mail.mailers.smtp.scheme'),
+        'username_configured' => filled(config('mail.mailers.smtp.username')),
+        'password_configured' => filled(config('mail.mailers.smtp.password')),
+    ],
+]));
 Route::post('/contact', [LeadController::class, 'contact'])->middleware('throttle:10,1');
 Route::post('/quotes', [LeadController::class, 'quote'])->middleware('throttle:10,1');
 Route::get('/payments/config', [PackagePaymentController::class, 'config']);

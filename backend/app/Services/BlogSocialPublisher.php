@@ -75,7 +75,7 @@ class BlogSocialPublisher
                 }
 
                 try {
-                    $bufferPost = $this->createPost($channel['id'], $this->caption($post), $post['image']);
+                    $bufferPost = $this->createPost($channel['id'], $channel['service'], $this->caption($post), $post['image']);
                     $publication->update([
                         'status' => 'published',
                         'buffer_post_id' => $bufferPost['id'] ?? null,
@@ -136,8 +136,20 @@ class BlogSocialPublisher
     }
 
     /** @return array<string, mixed> */
-    private function createPost(string $channelId, string $caption, string $image): array
+    private function createPost(string $channelId, string $service, string $caption, string $image): array
     {
+        $input = [
+            'text' => $caption,
+            'channelId' => $channelId,
+            'schedulingType' => 'automatic',
+            'mode' => 'shareNow',
+            'assets' => [['image' => ['url' => $image]]],
+        ];
+
+        if ($service === 'facebook') {
+            $input['metadata'] = ['facebook' => ['type' => 'post']];
+        }
+
         $data = $this->graphql(<<<'GRAPHQL'
 mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
@@ -150,13 +162,7 @@ mutation CreatePost($input: CreatePostInput!) {
   }
 }
 GRAPHQL, [
-            'input' => [
-                'text' => $caption,
-                'channelId' => $channelId,
-                'schedulingType' => 'automatic',
-                'mode' => 'shareNow',
-                'assets' => [['image' => ['url' => $image]]],
-            ],
+            'input' => $input,
         ]);
 
         if (isset($data['errors'][0]['message'])) {

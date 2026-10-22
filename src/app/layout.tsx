@@ -3,16 +3,19 @@ import Script from 'next/script';
 import './globals.css';
 import { SiteHeader, SiteFooter } from '@/components/site-shell';
 import { CookieConsent } from '@/components/cookie-consent';
+import { SiteStructuredData } from '@/components/structured-data';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.sansoftonline.com'),
   verification: { google: '3LlWj19-Wfiz7sGzvHLefa-xxsOF0OZU-1iJlAk1kuU' },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 } },
   title: 'Sansoft | Digital marketing that moves business forward',
   description: 'SEO, paid media and creative marketing for ambitious businesses. Strategy, execution and measurable growth from Sansoft.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body>
+    <SiteStructuredData />
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMMFSBJ2" height="0" width="0" style={{ display: 'none', visibility: 'hidden' }} title="Google Tag Manager" /></noscript>
     <SiteHeader />{children}<SiteFooter /><CookieConsent />
     <Script src="https://www.googletagmanager.com/gtag/js?id=G-0P366CPYJX" strategy="afterInteractive" />

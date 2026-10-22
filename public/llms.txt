@@ -1,0 +1,33 @@
+# Sansoft
+
+> Sansoft Web Technologies Pvt. Ltd. is a digital marketing agency based in Nagpur, India. We help businesses with SEO, local SEO, Google Ads, paid social, content, creative design and web development.
+
+## Primary pages
+
+- [Home](https://www.sansoftonline.com/): Overview of Sansoft and its digital marketing services.
+- [Services](https://www.sansoftonline.com/services/): Full service directory.
+- [SEO Packages](https://www.sansoftonline.com/seo-packages/): One-time SEO package options and deliverables.
+- [Google Ads Packages](https://www.sansoftonline.com/google-ads-packages/): Google Ads package options.
+- [Social Media Ads Packages](https://www.sansoftonline.com/social-media-ads-packages/): Paid social package options.
+- [Portfolio](https://www.sansoftonline.com/our-portfolio/): Selected client work.
+- [Insights](https://www.sansoftonline.com/blog/): Articles on SEO and digital marketing.
+- [Contact](https://www.sansoftonline.com/contact-us/): Contact details and enquiry form.
+
+## Key services
+
+- [Search engine optimization](https://www.sansoftonline.com/seo-services/)
+- [Local business SEO](https://www.sansoftonline.com/local-seo-services/)
+- [Technical SEO](https://www.sansoftonline.com/technical-seo-services/)
+- [On-page SEO](https://www.sansoftonline.com/on-page-seo-services/)
+- [Generative engine optimization](https://www.sansoftonline.com/generative-engine-optimization-services/)
+- [Google Ads management](https://www.sansoftonline.com/google-ads-management-services/)
+- [Social media advertising](https://www.sansoftonline.com/social-media-ads-services/)
+- [Web development](https://www.sansoftonline.com/web-development-services/)
+
+## Business details
+
+- Website: https://www.sansoftonline.com/
+- Email: sales@sansoftonline.com
+- Phone: +91 82370 66600
+- Address: 64, Beltarodi Road, Manish Nagar, Nagpur, Maharashtra 440037, India
+- XML sitemap: https://www.sansoftonline.com/sitemap.xml

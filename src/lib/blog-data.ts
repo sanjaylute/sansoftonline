@@ -16,8 +16,8 @@ export const blogPosts: BlogPost[] = [
     slug: 'top-10-free-seo-and-ai-seo-tools-for-better-visibility', category: 'SEO tools',
     title: 'Top 10 Free SEO and AI SEO Tools for Better Visibility',
     excerpt: 'A practical toolkit for checking search performance, technical foundations and AI search readiness without starting with an expensive software stack.',
-    date: 'October 22, 2026', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1500&q=85',
-    imageAlt: 'SEO performance and website analytics displayed on a laptop',
+    date: 'October 22, 2026', image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1500&q=85',
+    imageAlt: 'Laptop workspace for researching free SEO and AI tools',
     paragraphs: [
       'Free tools are a strong place to begin when you need to understand your website before investing in a larger SEO platform. They will not replace strategy or implementation, but they can reveal indexation issues, search demand, performance problems and the questions your audience is asking. Free tiers and limits change, so always check each provider’s current terms before relying on a workflow.',
     ],

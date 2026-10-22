@@ -7,10 +7,35 @@ export type BlogPost = {
   image: string;
   imageAlt: string;
   paragraphs: string[];
+  sections?: { heading: string; content: string }[];
 };
 
 // Keep the established WordPress article slugs so the rebuilt blog preserves its URLs.
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'top-10-free-seo-and-ai-seo-tools-for-better-visibility', category: 'SEO tools',
+    title: 'Top 10 Free SEO and AI SEO Tools for Better Visibility',
+    excerpt: 'A practical toolkit for checking search performance, technical foundations and AI search readiness without starting with an expensive software stack.',
+    date: 'October 22, 2026', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1500&q=85',
+    imageAlt: 'SEO performance and website analytics displayed on a laptop',
+    paragraphs: [
+      'Free tools are a strong place to begin when you need to understand your website before investing in a larger SEO platform. They will not replace strategy or implementation, but they can reveal indexation issues, search demand, performance problems and the questions your audience is asking. Free tiers and limits change, so always check each provider’s current terms before relying on a workflow.',
+    ],
+    sections: [
+      { heading: '1. Google Search Console', content: 'Google Search Console is the essential starting point for organic search. Use it to see which queries and pages bring impressions and clicks, inspect indexation, submit your XML sitemap and investigate coverage or enhancement issues. It is the most direct view of how Google is processing your own website.' },
+      { heading: '2. Google PageSpeed Insights', content: 'PageSpeed Insights helps identify performance issues that affect the experience visitors have on mobile and desktop. Review the field data where it is available, then use the diagnostic suggestions to prioritize image, script, layout and loading improvements instead of chasing a perfect score.' },
+      { heading: '3. Google Trends', content: 'Google Trends is useful for comparing topics, seeing seasonality and exploring regional interest. It is especially helpful before committing to content ideas or campaign themes, because it helps separate a temporary spike from a topic with steady demand.' },
+      { heading: '4. Bing Webmaster Tools', content: 'Bing Webmaster Tools gives another free view of crawling, indexing, search performance and site diagnostics. It can complement Search Console, particularly when you want broader insight into how a second major search engine discovers and understands your pages.' },
+      { heading: '5. Google Rich Results Test', content: 'Use Google’s Rich Results Test to check whether eligible structured data can be read from an individual page. It is useful after adding product, article, FAQ, breadcrumb or organization markup. Passing a test does not promise a rich result, but it confirms whether Google can parse the markup.' },
+      { heading: '6. Schema Markup Validator', content: 'The Schema Markup Validator is a complementary check for structured data beyond Google-specific rich-result eligibility. Run important templates through it after schema changes to catch syntax or entity errors before they become a site-wide issue.' },
+      { heading: '7. Ahrefs Webmaster Tools', content: 'Ahrefs Webmaster Tools can provide a free view of verified-site technical issues, backlinks and organic keywords. It is helpful for an initial audit and for understanding whether important pages have link or crawl problems that deserve deeper investigation.' },
+      { heading: '8. Screaming Frog SEO Spider', content: 'Screaming Frog is useful for crawling a smaller site locally and reviewing titles, descriptions, headings, links, canonicals, redirects and status codes in one place. Start with a focused crawl of your own site, then turn the findings into a short prioritized fix list.' },
+      { heading: '9. SEOHACK.AI', content: 'SEOHACK.AI is built for both traditional SEO and AI search readiness. Its free audit checks homepage SEO, technical and on-page signals, performance and AI SEO factors, then organizes issues into prioritized recommendations. It is a useful starting point when you want to assess crawlability, structured content and AI visibility together instead of reviewing each area in isolation.' },
+      { heading: '10. ChatGPT or Gemini for research support', content: 'General AI tools can speed up research tasks such as clustering customer questions, turning a list of search queries into content angles and identifying gaps in a page outline. Treat the output as a draft: verify claims, use your own expertise and avoid publishing generic text that does not add a useful perspective.' },
+      { heading: 'When to add Upstrait', content: 'Once individual checks need to become a repeatable campaign, Upstrait can bring rankings, audits, AI SEO analysis, backlink monitoring, Google Search Console, Google Analytics and reporting into a single campaign workspace. It is most useful when you need a clear record of work completed and progress across several websites or clients.' },
+      { heading: 'Use the tools as a workflow, not a checklist', content: 'Begin with Search Console and a technical crawl, review performance and structured data, then use AI search checks to improve clarity and accessibility. The goal is not to collect more reports. It is to choose the few changes that make your website more useful, credible and easier for both people and search systems to understand.' },
+    ],
+  },
   {
     slug: 'why-your-nagpur-business-needs-seo-in-2026', category: 'Local SEO',
     title: 'Why Your Nagpur Business Needs SEO in 2026',

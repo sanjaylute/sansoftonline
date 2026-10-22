@@ -207,7 +207,7 @@ GRAPHQL, [
         $response = Http::withToken(config('services.social.buffer_api_key'))
             ->acceptJson()
             ->timeout(30)
-            ->post(self::BUFFER_ENDPOINT, ['query' => $query, 'variables' => $variables]);
+            ->post(self::BUFFER_ENDPOINT, ['query' => $query, 'variables' => (object) $variables]);
         $response->throw();
 
         return $response->json();

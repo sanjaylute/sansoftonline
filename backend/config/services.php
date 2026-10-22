@@ -13,5 +13,9 @@ return [
     'turnstile' => [
         'secret_key' => env('TURNSTILE_SECRET_KEY'),
     ],
+    'social' => [
+        'buffer_api_key' => env('BUFFER_API_KEY'),
+        'site_url' => rtrim(env('SITE_URL', env('FRONTEND_URL', 'https://www.sansoftonline.com')), '/'),
+    ],
 
 ];

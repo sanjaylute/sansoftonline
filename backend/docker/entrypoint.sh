@@ -13,4 +13,7 @@ fi
 php artisan migrate --force
 php artisan config:cache
 
+# Each article/channel pair is persisted, so a restart never republishes an article.
+php artisan schedule:work >> /proc/1/fd/1 2>> /proc/1/fd/2 &
+
 exec "$@"

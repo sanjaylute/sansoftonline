@@ -7,6 +7,7 @@ import { BlogArticle, blogPostMetadata, findBlogPost } from '@/components/blog-a
 import { blogPosts } from '@/lib/blog-data';
 import { livePageMetadata, livePostMetadata } from '@/lib/live-seo-metadata';
 import './remaining-page.css';
+import '../blog/blog-pages.css';
 import '../../components/blog-article.css';
 
 export function generateStaticParams(){return [...remainingPages.filter(page=>!['local-seo-services','sitemap','our-portfolio'].includes(page.slug)).map(page=>({slug:page.slug})),...blogPosts.map(post=>({slug:post.slug}))];}

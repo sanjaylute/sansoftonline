@@ -26,6 +26,7 @@ export function CookieConsent() {
     } catch {
       // The choice still applies for this visit when browser storage is unavailable.
     }
+    window.dispatchEvent(new CustomEvent('sansoft-cookie-choice', { detail: choice }));
     setVisible(false);
   }
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, ArrowUpRight, BadgeCheck, BarChart3, Check, ChevronRight, Globe2, MapPin, Megaphone, Palette, Search, ShieldCheck, Sparkles, Target, TrendingUp, UsersRound } from 'lucide-react';
 import './home.css';
 import { LeadForm } from '@/components/forms';
@@ -22,7 +23,7 @@ const testimonials = [
 
 export default function HomePage(){return <main className="home-page">
   <section className="home-hero"><div className="home-wrap hero-grid"><div className="hero-copy"><div className="home-kicker"><i/> DIGITAL MARKETING THAT MOVES BUSINESS FORWARD</div><h1>Make your brand<br/>the <span>one they choose.</span></h1><p className="hero-lede">From getting found on Google to building a stronger social presence, Sansoft brings the strategy, creative and hands-on expertise to help your business grow.</p><div className="hero-buttons"><Link className="home-button home-button-orange" href="/request-quote">Get a free consultation <ArrowUpRight size={17}/></Link><Link className="home-text-link" href="/services">Explore our services <ArrowRight size={16}/></Link></div><div className="hero-proof"><div className="proof-avatars"><span>S</span><span>G</span><span>+</span></div><div><b>Digital growth partner since 2003</b><small>Trusted by businesses in India and worldwide</small></div></div></div>
-    <div className="hero-art"><img className="hero-art-photo" src="/home-hero-team.png" alt="Digital marketing professionals collaborating on a growth strategy"/><div className="hero-photo-caption"><span>STRATEGY · CREATIVE · PERFORMANCE</span><b>One team, moving your business forward.</b></div></div>
+    <div className="hero-art"><Image className="hero-art-photo" src="/home-hero-team.png" alt="Digital marketing professionals collaborating on a growth strategy" width={1448} height={1086} priority sizes="(max-width: 650px) calc(100vw - 46px), (max-width: 1200px) 48vw, 600px"/><div className="hero-photo-caption"><span>STRATEGY · CREATIVE · PERFORMANCE</span><b>One team, moving your business forward.</b></div></div>
   </div><div className="hero-down"><span>SCROLL TO EXPLORE</span><ChevronRight size={14}/></div></section>
 
   <section className="home-metrics"><div className="home-wrap metrics-row"><div className="metrics-intro"><span className="home-kicker"><i/> EXPERIENCE THAT ADDS UP</span><p>Good work, built on long-term partnerships.</p></div><div className="metric"><strong>190<span>+</span></strong><small>Current projects</small></div><div className="metric"><strong>15,000<span>+</span></strong><small>Projects completed</small></div><div className="metric"><strong>2003</strong><small>Year Sansoft was founded</small></div><div className="metric metric-upwork"><strong>#1</strong><small>Digital marketing agency<br/>on Upwork*</small></div></div></section>

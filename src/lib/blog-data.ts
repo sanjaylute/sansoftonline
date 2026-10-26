@@ -8,10 +8,33 @@ export type BlogPost = {
   imageAlt: string;
   paragraphs: string[];
   sections?: { heading: string; content: string }[];
+  cta?: { label: string; href: string };
 };
 
 // Keep the established WordPress article slugs so the rebuilt blog preserves its URLs.
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'what-do-seo-services-include-small-business-buyers-checklist', category: 'SEO guides',
+    title: 'What Do SEO Services Include? A Small Business Buyer’s Checklist',
+    excerpt: 'A practical checklist of the work, deliverables and questions that help small businesses compare SEO service proposals with confidence.',
+    date: 'October 26, 2026', image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1500&q=85',
+    imageAlt: 'Small business team reviewing a website and marketing plan together',
+    paragraphs: [
+      'SEO services should make your website easier to find, understand and use for the people you want to reach. The right scope varies by business, but a good proposal explains the starting point, the work that will be completed, the deliverables you will receive and how progress will be reviewed. It should not rely on vague promises of rankings.',
+    ],
+    sections: [
+      { heading: 'Start with an initial SEO audit', content: 'A useful SEO service usually begins with an audit of your website. This should review crawlability, indexation, mobile usability, speed, technical errors, important page templates, internal links and any issues that could prevent search engines or visitors from using the site properly. Ask for a prioritized list, not just a long export of warnings.' },
+      { heading: 'Keyword and customer research', content: 'Keyword research is more than collecting high-volume phrases. Your provider should identify the searches that match your products, services, locations and customer questions. For a local business, that often includes service and location combinations. The output should show which pages will be improved or created and why each topic matters.' },
+      { heading: 'Technical SEO fixes', content: 'Technical SEO work may include fixing broken links, redirects, duplicate pages, page titles, canonical tags, XML sitemaps, robots directives, structured data and page-speed issues. The exact scope depends on the platform and current site condition. Confirm whether your provider will implement fixes or provide recommendations for your developer.' },
+      { heading: 'On-page optimization', content: 'On-page SEO improves the pages that customers and search engines actually use. This can include clearer page titles and descriptions, heading structure, service copy, internal links, image alt text and calls to action. Each change should make the page more useful for people first, while helping search engines understand its subject and purpose.' },
+      { heading: 'Content and local visibility', content: 'Many websites also need useful new or refreshed content. Depending on the business, that could include service pages, location pages, guides, FAQs or case studies. If you serve a local market, the scope may also cover your Google Business Profile, consistent business details, citations and review processes.' },
+      { heading: 'Authority and link acquisition', content: 'Some SEO proposals include digital PR, outreach or link acquisition. Quality matters more than volume. Ask how potential websites are assessed, whether placements are relevant to your industry and audience, and how links are earned. Be cautious of guarantees involving a fixed number of low-quality links.' },
+      { heading: 'Reporting that supports decisions', content: 'A useful report connects work completed with meaningful signals such as search impressions, clicks, rankings, traffic, leads and conversions. It should explain what changed, what has been done and what comes next. Rankings can be helpful, but they are only one indicator of whether SEO is supporting the business.' },
+      { heading: 'Questions to ask before you choose an SEO provider', content: 'Ask who will do the work, what is included each month, what access is needed, which tasks are implementation versus recommendations, how success will be measured and how often you will receive updates. A clear answer to these questions makes proposals easier to compare and helps avoid a scope that looks broad but has little practical delivery behind it.' },
+      { heading: 'Choose a scope that fits your starting point', content: 'A small business does not need every possible SEO activity at once. Start with the issues and opportunities most likely to affect discovery, trust and enquiries. A transparent plan can grow over time as your website, competition and priorities change.' },
+    ],
+    cta: { label: 'Explore Sansoft SEO services', href: '/seo-services/' },
+  },
   {
     slug: 'top-10-free-seo-and-ai-seo-tools-for-better-visibility', category: 'SEO tools',
     title: 'Top 10 Free SEO and AI SEO Tools for Better Visibility',

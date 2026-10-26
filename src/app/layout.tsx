@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { SiteHeader, SiteFooter } from '@/components/site-shell';
 import { CookieConsent } from '@/components/cookie-consent';
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return <html lang="en"><body>
     <SiteStructuredData />
     <SiteHeader />{children}<SiteFooter /><CookieConsent />
+    <Script id="google-analytics-loader" src="https://www.googletagmanager.com/gtag/js?id=G-0P366CPYJX" strategy="afterInteractive" />
     <Analytics />
   </body></html>;
 }

@@ -1,34 +1,8 @@
-'use client';
-
 import Script from 'next/script';
-import { useEffect, useState } from 'react';
-
-function hasAnalyticsConsent() {
-  try {
-    return window.localStorage.getItem('sansoft-cookie-choice') === 'all';
-  } catch {
-    return false;
-  }
-}
 
 export function Analytics() {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    setEnabled(hasAnalyticsConsent());
-
-    const updateConsent = (event: Event) => {
-      if ((event as CustomEvent<string>).detail === 'all') setEnabled(true);
-    };
-
-    window.addEventListener('sansoft-cookie-choice', updateConsent);
-    return () => window.removeEventListener('sansoft-cookie-choice', updateConsent);
-  }, []);
-
-  if (!enabled) return null;
-
   return <>
-    <Script id="google-analytics-gtag" strategy="afterInteractive">{`
+    <Script id="google-analytics-gtag" strategy="beforeInteractive">{`
       window.dataLayer = window.dataLayer || [];
       function gtag(){window.dataLayer.push(arguments);}
       gtag('js', new Date());

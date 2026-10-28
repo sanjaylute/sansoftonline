@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { blogPosts } from '@/lib/blog-data';
 import { packagePages } from '@/lib/package-data';
 import { services, serviceHref } from '@/lib/content';
+import { localizedLocales } from '@/lib/localized-pages';
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sansoftonline.com').replace(/\/$/, '');
 
@@ -56,6 +57,8 @@ function priceNumber(price: string) {
 
 export function SiteStructuredData() {
   const pathname = cleanPath(usePathname());
+  const firstSegment = pathname.split('/').filter(Boolean).at(0);
+  if (firstSegment && localizedLocales.includes(firstSegment as typeof localizedLocales[number])) return null;
   const url = `${siteUrl}${pathname}`;
   const slug = pathname.split('/').filter(Boolean).at(-1) || '';
   const post = blogPosts.find(item => item.slug === slug);

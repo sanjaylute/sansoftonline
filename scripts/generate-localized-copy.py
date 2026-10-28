@@ -4,6 +4,7 @@ This only reads publicly rendered marketing pages. It does not read forms,
 analytics, customer records, or any private application data.
 """
 import concurrent.futures
+import argparse
 import json
 import re
 import sys
@@ -15,8 +16,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCALES = ['es', 'de', 'fr', 'it', 'pt', 'nl', 'pl', 'da', 'id', 'tr', 'ja', 'hi', 'mr']
-PATHS = ['/', '/about-us/', '/seo-services/', '/local-seo-services/', '/google-ads-management-services/', '/social-media-management-services/', '/web-development-services/', '/contact-us/']
+PATHS = re.findall(r'"(/[^\"]*/?)"', (ROOT / 'src/lib/localized-paths.ts').read_text())
 BASE = sys.argv[1] if len(sys.argv) > 1 else 'http://127.0.0.1:3011'
+parser = argparse.ArgumentParser()
+parser.add_argument('--locale', choices=LOCALES)
+arguments, _ = parser.parse_known_args()
 
 def normalize(value):
     return re.sub(r'\s+', ' ', value).strip()
@@ -42,6 +46,8 @@ class PublicCopyParser(HTMLParser):
         if not self.skip:
             for key in ['alt', 'title', 'placeholder', 'aria-label']:
                 self.add(attrs.get(key, ''))
+            if tag == 'meta' and attrs.get('name', attrs.get('property', '')) in ['description', 'og:title', 'og:description', 'twitter:title', 'twitter:description']:
+                self.add(attrs.get('content', ''))
     def handle_endtag(self, tag):
         if self.stack and self.stack[-1][2] == tag:
             parts, has_children, _ = self.stack.pop()
@@ -55,14 +61,23 @@ class PublicCopyParser(HTMLParser):
             if self.stack:
                 self.stack[-1][0].append(data)
 
+class Redirect308(urllib.request.HTTPRedirectHandler):
+    def http_error_308(self, req, fp, code, msg, headers):
+        return self.http_error_302(req, fp, code, msg, headers)
+
+OPENER = urllib.request.build_opener(Redirect308())
+
 def public_copy():
     result = set()
     for path in PATHS:
         request = urllib.request.Request(BASE + path, headers={'User-Agent': 'Sansoft translation generator'})
-        with urllib.request.urlopen(request, timeout=60) as response:
-            parser = PublicCopyParser()
-            parser.feed(response.read().decode('utf-8'))
-            result.update(parser.text)
+        try:
+            with OPENER.open(request, timeout=60) as response:
+                parser = PublicCopyParser()
+                parser.feed(response.read().decode('utf-8'))
+                result.update(parser.text)
+        except urllib.error.HTTPError as error:
+            print('Skipped redirected or unavailable path', path, error.code, flush=True)
     return sorted(result)
 
 def translate_batch(batch, locale):
@@ -103,7 +118,7 @@ def batches(values, size=1800):
 
 sources = public_copy()
 print('Collected', len(sources), 'public strings', flush=True)
-for locale in LOCALES:
+for locale in ([arguments.locale] if arguments.locale else LOCALES):
     destination = ROOT / 'src' / 'locales' / (locale + '.json')
     existing = json.loads(destination.read_text()) if destination.exists() else {}
     missing = [value for value in sources if value not in existing]

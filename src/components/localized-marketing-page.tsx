@@ -1,31 +1,14 @@
-import HomePage from '@/app/page';
-import AboutPage from '@/app/about-us/page';
-import SeoServicesPage from '@/app/seo-services/page';
-import LocalSeoServicesPage from '@/app/local-seo-services/page';
-import GoogleAdsServicesPage from '@/app/google-ads-management-services/page';
-import SocialMediaServicesPage from '@/app/social-media-management-services/page';
-import WebDevelopmentServicesPage from '@/app/web-development-services/page';
-import ContactPage from '@/app/contact-us/page';
 import { LocalizedCopy } from '@/components/localized-copy';
-import { getLocalizedCopy, localizedHref, normalizeLocalizedPath, type LocalizedLocale } from '@/lib/localized-pages';
-
-const sourcePages = {
-  '/': HomePage,
-  '/about-us/': AboutPage,
-  '/seo-services/': SeoServicesPage,
-  '/local-seo-services/': LocalSeoServicesPage,
-  '/google-ads-management-services/': GoogleAdsServicesPage,
-  '/social-media-management-services/': SocialMediaServicesPage,
-  '/web-development-services/': WebDevelopmentServicesPage,
-  '/contact-us/': ContactPage,
-};
+import { localizedSourcePages } from '@/components/localized-source-pages';
+import RemainingPage from '@/app/[slug]/page';
+import { getLocalizedCopy, getLocalizedTopic, localizedHref, normalizeLocalizedPath, type LocalizedLocale } from '@/lib/localized-pages';
 
 export function LocalizedMarketingPage({ locale, path }: { locale: LocalizedLocale; path: string }) {
   const normalized = normalizeLocalizedPath(path);
   const copy = getLocalizedCopy(locale);
-  const topic = copy.topics[normalized];
-  const SourcePage = sourcePages[normalized];
-  if (!topic || !SourcePage) return null;
+  const topic = getLocalizedTopic(locale, normalized);
+  const SourcePage = localizedSourcePages[normalized as keyof typeof localizedSourcePages];
+  const slug = normalized === '/' ? '' : normalized.slice(1, -1);
 
   const canonical = 'https://www.sansoftonline.com' + localizedHref(locale, normalized);
   const isService = !['/', '/about-us/', '/contact-us/'].includes(normalized);
@@ -56,6 +39,8 @@ export function LocalizedMarketingPage({ locale, path }: { locale: LocalizedLoca
 
   return <>
     <script id={'localized-schema-' + locale} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
-    <LocalizedCopy locale={locale}><SourcePage /></LocalizedCopy>
+    <LocalizedCopy locale={locale}>
+      {SourcePage ? <SourcePage /> : <RemainingPage params={Promise.resolve({ slug })} />}
+    </LocalizedCopy>
   </>;
 }

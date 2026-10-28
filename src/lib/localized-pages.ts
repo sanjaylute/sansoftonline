@@ -1,17 +1,13 @@
 export const localizedLocales = ['es', 'de', 'fr', 'it', 'pt', 'nl', 'pl', 'da', 'id', 'tr', 'ja', 'hi', 'mr'] as const;
 export type LocalizedLocale = (typeof localizedLocales)[number];
 
-export const localizedPublicPaths = [
-  '/', '/about-us/', '/seo-services/', '/local-seo-services/',
-  '/google-ads-management-services/', '/social-media-management-services/',
-  '/web-development-services/', '/contact-us/',
-] as const;
-export type LocalizedPath = (typeof localizedPublicPaths)[number];
+import { localizedPublicPaths, type LocalizedPath } from '@/lib/localized-paths';
+export { localizedPublicPaths, type LocalizedPath } from '@/lib/localized-paths';
 
 type Copy = {
   label: string; htmlLang: string; eyebrow: string; intro: string; cta: string;
   strategy: string; strategyText: string; delivery: string; deliveryText: string;
-  reporting: string; reportingText: string; topics: Record<LocalizedPath, string>;
+  reporting: string; reportingText: string; topics: Partial<Record<LocalizedPath, string>>;
 };
 
 const copies: Record<LocalizedLocale, Copy> = {
@@ -37,6 +33,20 @@ export function normalizeLocalizedPath(path: string): LocalizedPath {
 
 export function getLocalizedCopy(locale: LocalizedLocale) {
   return copies[locale];
+}
+
+const localizedTopicFallbacks: Partial<Record<LocalizedPath, LocalizedPath>> = {
+  '/seo-packages/': '/seo-services/',
+  '/google-ads-packages/': '/google-ads-management-services/',
+  '/social-media-ads-packages/': '/social-media-management-services/',
+  '/social-media-posts-design-packages/': '/social-media-management-services/',
+  '/custom-service/': '/contact-us/',
+};
+
+export function getLocalizedTopic(locale: LocalizedLocale, path: string) {
+  const normalized = normalizeLocalizedPath(path);
+  const copy = getLocalizedCopy(locale);
+  return copy.topics[normalized] || copy.topics[localizedTopicFallbacks[normalized] || '/'] || 'Sansoft';
 }
 
 export function hasLocalizedPath(path: string) {

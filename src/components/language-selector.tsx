@@ -1,6 +1,5 @@
 'use client';
 
-import { Globe2 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { hasLocalizedPath, localizedHref, localizedLocales, normalizeLocalizedPath } from '@/lib/localized-pages';
 
@@ -8,6 +7,11 @@ const labels: Record<string, string> = {
   en: 'English', es: 'Español', de: 'Deutsch', fr: 'Français', it: 'Italiano',
   pt: 'Português', nl: 'Nederlands', pl: 'Polski', da: 'Dansk', id: 'Bahasa Indonesia',
   tr: 'Türkçe', ja: '日本語', hi: 'हिन्दी', mr: 'मराठी',
+};
+
+const flags: Record<string, string> = {
+  en: '🇬🇧', es: '🇪🇸', de: '🇩🇪', fr: '🇫🇷', it: '🇮🇹', pt: '🇵🇹', nl: '🇳🇱',
+  pl: '🇵🇱', da: '🇩🇰', id: '🇮🇩', tr: '🇹🇷', ja: '🇯🇵', hi: '🇮🇳', mr: '🇮🇳',
 };
 
 function sourcePath(pathname: string) {
@@ -21,17 +25,20 @@ export function LanguageSelector() {
   const path = sourcePath(pathname);
   const current = pathname.split('/').filter(Boolean).at(0);
   const locale = current && localizedLocales.includes(current as typeof localizedLocales[number]) ? current : 'en';
-  if (!hasLocalizedPath(path)) return null;
+  const hasTranslation = hasLocalizedPath(path);
 
   return <label className="language-selector">
-    <Globe2 size={15} aria-hidden="true" />
-    <span className="sr-only">Select language</span>
-    <select value={locale} onChange={(event) => {
+    <select aria-label="Language" value={locale} onChange={(event) => {
       const next = event.target.value;
-      window.location.assign(next === 'en' ? path : localizedHref(next as typeof localizedLocales[number], path));
+      const destination = next === 'en'
+        ? path
+        : hasTranslation
+          ? localizedHref(next as typeof localizedLocales[number], path)
+          : localizedHref(next as typeof localizedLocales[number], '/');
+      window.location.assign(destination);
     }}>
-      <option value="en">English</option>
-      {localizedLocales.map((item) => <option key={item} value={item}>{labels[item]}</option>)}
+      <option value="en">{flags.en} EN — English</option>
+      {localizedLocales.map((item) => <option key={item} value={item}>{flags[item]} {item.toUpperCase()} — {labels[item]}</option>)}
     </select>
   </label>;
 }

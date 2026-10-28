@@ -147,14 +147,14 @@ export function SiteHeader() {
             {link.label}<ChevronDown size={14}/>
           </button>
           <div className="nav-dropdown" id="services-mega-menu">
-            <div className="nav-dropdown-intro"><span>THE SANSOFT SERVICE DIRECTORY</span><strong>Find the right expertise for your next move.</strong><Link href="/services/" onClick={closeNavigation}>Explore all services <ArrowUpRight size={15}/></Link></div>
+            <div className="nav-dropdown-intro"><span>THE SANSOFT SERVICE DIRECTORY</span><strong>Find the right expertise for your next move.</strong><Link href={headerHref('/services/')} onClick={closeNavigation}>Explore all services <ArrowUpRight size={15}/></Link></div>
             <div className="nav-dropdown-grid">{groupedServices.map(group => <section key={group.name}>
               <h3><span className="nav-group-icon"><group.icon size={16}/></span>{group.name}</h3><p>{group.description}</p>
-              <div className="nav-dropdown-links">{group.items.map(service => <Link key={service.slug} href={serviceHref(service.slug)} onClick={closeNavigation}><ServiceIcon title={service.title} slug={service.slug}/><span>{service.title}</span><ArrowUpRight className="nav-service-arrow" size={13}/></Link>)}</div>
+              <div className="nav-dropdown-links">{group.items.map(service => <Link key={service.slug} href={headerHref(serviceHref(service.slug))} onClick={closeNavigation}><ServiceIcon title={service.title} slug={service.slug}/><span>{service.title}</span><ArrowUpRight className="nav-service-arrow" size={13}/></Link>)}</div>
             </section>)}</div>
           </div>
         </div> : <Link key={link.href} href={headerHref(link.href)} onClick={closeNavigation}>{link.label}</Link>)}
-        <Link className="nav-quote" href="/request-quote/" onClick={closeNavigation}>Let’s talk <ArrowUpRight size={15}/></Link>
+        <Link className="nav-quote" href={headerHref('/request-quote/')} onClick={closeNavigation}>Let’s talk <ArrowUpRight size={15}/></Link>
         <LanguageSelector />
       </nav>
       <button className="menu-toggle" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(value => { if (value) setServicesOpen(false); return !value; })}>{open ? <X/> : <Menu/>}</button>

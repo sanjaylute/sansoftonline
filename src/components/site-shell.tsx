@@ -7,6 +7,8 @@ import { usePathname } from 'next/navigation';
 import { ArrowUpRight, ChevronDown, Code2, FileText, Gauge, Image as ImageIcon, Link2, Mail, MapPin, Megaphone, Menu, Network, Palette, Phone, Search, ShieldCheck, ShoppingBag, Sparkles, Target, Users, Video, X } from 'lucide-react';
 import { navLinks, services, serviceHref } from '@/lib/content';
 import { blogPostSlugs } from '@/lib/blog-slugs';
+import { hasLocalizedPath, localizedHref, localizedLocales } from '@/lib/localized-pages';
+import { LanguageSelector } from '@/components/language-selector';
 
 const serviceGroups = [
   { name: 'SEO & search', icon: Search, description: 'Build lasting visibility and get found by the right people.', match: (title: string, slug: string) => /seo|citation|business profile/i.test(`${title} ${slug}`) },
@@ -103,7 +105,9 @@ const pageLabels: Record<string, string> = {
 };
 
 function pageLabel(pathname: string) {
-  const cleanPath = pathname.replace(/\/$/, '') || '/';
+  const parts = pathname.split('/').filter(Boolean);
+  if (parts[0] && localizedLocales.includes(parts[0] as typeof localizedLocales[number])) parts.shift();
+  const cleanPath = '/' + parts.join('/') || '/';
   if (cleanPath === '/') return null;
   const slug = cleanPath.split('/').filter(Boolean).at(-1) || '';
   // Article pages render their own category, title and metadata. A global page
@@ -121,6 +125,9 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const pathname = usePathname();
+  const firstPathSegment = pathname.split('/').filter(Boolean).at(0);
+  const activeLocale = firstPathSegment && localizedLocales.includes(firstPathSegment as typeof localizedLocales[number]) ? firstPathSegment as typeof localizedLocales[number] : null;
+  const headerHref = (href: string) => activeLocale && hasLocalizedPath(href) ? localizedHref(activeLocale, href) : href;
   const currentPage = pageLabel(pathname);
   const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeNavigation = () => { setOpen(false); setServicesOpen(false); };
@@ -133,7 +140,7 @@ export function SiteHeader() {
       <div><a href="tel:+918237066600"><Phone size={13}/> +91 82370 66600</a><a href="mailto:sales@sansoftonline.com"><Mail size={13}/> sales@sansoftonline.com</a></div>
     </div></div>
     <header className="site-header"><div className="wrap nav-inner">
-      <Link className="brand" href="/" aria-label="Sansoft home" onClick={closeNavigation}><Image src="/sansoft-logo-orange.png" alt="Sansoft" width={1581} height={318} className="brand-logo"/></Link>
+      <Link className="brand" href={headerHref('/')} aria-label="Sansoft home" onClick={closeNavigation}><Image src="/sansoft-logo-orange.png" alt="Sansoft" width={1581} height={318} className="brand-logo"/></Link>
       <nav className={open ? 'nav-links nav-open' : 'nav-links'} aria-label="Main navigation">
         {navLinks.map(link => link.label === 'Services' ? <div className={`nav-services-menu${servicesOpen ? ' is-open' : ''}`} key={link.href} onMouseEnter={() => { cancelMenuClose(); if (window.matchMedia('(hover: hover)').matches) setServicesOpen(true); }} onMouseLeave={() => { if (window.matchMedia('(hover: hover)').matches) scheduleMenuClose(); }} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setServicesOpen(false); }} onKeyDown={event => { if (event.key === 'Escape') { cancelMenuClose(); setServicesOpen(false); } }}>
           <button type="button" className="nav-service-trigger" aria-expanded={servicesOpen} aria-controls="services-mega-menu" onClick={() => setServicesOpen(value => !value)}>
@@ -146,8 +153,9 @@ export function SiteHeader() {
               <div className="nav-dropdown-links">{group.items.map(service => <Link key={service.slug} href={serviceHref(service.slug)} onClick={closeNavigation}><ServiceIcon title={service.title} slug={service.slug}/><span>{service.title}</span><ArrowUpRight className="nav-service-arrow" size={13}/></Link>)}</div>
             </section>)}</div>
           </div>
-        </div> : <Link key={link.href} href={link.href} onClick={closeNavigation}>{link.label}</Link>)}
+        </div> : <Link key={link.href} href={headerHref(link.href)} onClick={closeNavigation}>{link.label}</Link>)}
         <Link className="nav-quote" href="/request-quote/" onClick={closeNavigation}>Let’s talk <ArrowUpRight size={15}/></Link>
+        <LanguageSelector />
       </nav>
       <button className="menu-toggle" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(value => { if (value) setServicesOpen(false); return !value; })}>{open ? <X/> : <Menu/>}</button>
     </div></header>

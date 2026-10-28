@@ -116,7 +116,21 @@ def batches(values, size=1800):
     if batch:
         yield batch
 
-sources = public_copy()
+EXTRA_STRINGS = {
+    'SECURE CHECKOUT', 'Purchase', 'package', 'Your name', 'Email address',
+    'Custom amount (USD)', 'Service details / comments', 'Tell us what this payment is for.',
+    'Cards, UPI & more', 'Pay securely with PayPal', 'Continue to Razorpay',
+    'Preparing secure checkout…', 'Payments are processed securely by the selected payment provider.',
+    'Close payment window', 'Thank you.', 'Close',
+    'Payment received. Sansoft will contact you shortly to begin your package.',
+    'PayPal is not configured yet. Please contact Sansoft to purchase this package.',
+    'PayPal could not be loaded. Please try again.', 'PayPal could not complete the payment. Please try again.',
+    'Enter the custom amount and service details before paying.', 'Unable to start checkout.',
+    'Razorpay checkout could not be loaded.', 'Could not start Razorpay checkout.',
+    'Payment confirmation failed.', 'Payment verification failed.', 'Razorpay payment failed.',
+    'PayPal payment confirmation failed.', 'Could not start PayPal checkout.',
+}
+sources = sorted(set(public_copy()) | EXTRA_STRINGS)
 print('Collected', len(sources), 'public strings', flush=True)
 for locale in ([arguments.locale] if arguments.locale else LOCALES):
     destination = ROOT / 'src' / 'locales' / (locale + '.json')

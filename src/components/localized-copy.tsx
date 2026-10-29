@@ -15,7 +15,7 @@ const dictionaries: Record<LocalizedLocale, () => Promise<{ default: Dictionary 
   mr: () => import('@/locales/mr.json'),
 };
 
-const ignored = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'SVG', 'TEXTAREA', 'OPTION']);
+const ignored = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'SVG', 'TEXTAREA']);
 const normalize = (value: string) => value.replace(/\s+/g, ' ').trim();
 
 export function LocalizedCopy({ locale, children }: { locale: LocalizedLocale; children: React.ReactNode }) {

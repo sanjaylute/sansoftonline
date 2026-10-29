@@ -596,7 +596,6 @@
   "Trusted by businesses in India and worldwide": "भारत और दुनिया भर के व्यवसायों द्वारा विश्वसनीय",
   "Turn search intent": "खोज अभिप्राय चालू करें",
   "Türkçe": "तुर्कसे",
-  "Under ₹50,000": "₹50,000 से कम",
   "Understand demand": "मांग को समझें",
   "Up": "ऊपर",
   "Upwork client": "अपवर्क क्लाइंट",
@@ -4103,5 +4102,9 @@
   "Thank you.": "धन्यवाद.",
   "Unable to start checkout.": "चेकआउट प्रारंभ करने में असमर्थ.",
   "Your name": "आपका नाम",
-  "package": "पैकेज"
+  "package": "पैकेज",
+  "Under $500 USD": "$500 USD से कम",
+  "$500 – $1,500 USD": "$500 – $1,500 USD",
+  "$1,500 – $5,000 USD": "$1,500 – $5,000 USD",
+  "$5,000+ USD": "$5,000+ USD"
 }

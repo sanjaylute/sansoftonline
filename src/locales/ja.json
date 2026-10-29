@@ -610,7 +610,6 @@
   "Trusted by businesses in India and worldwide": "インドおよび世界中の企業から信頼されています",
   "Turn search intent": "検索意図を変える",
   "Türkçe": "テュルクチェ語",
-  "Under ₹50,000": "₹50,000未満",
   "Understand demand": "需要を理解する",
   "Up": "上へ",
   "Upwork client": "アップワーククライアント",
@@ -4103,5 +4102,9 @@
   "Thank you.": "ありがとうございます。",
   "Unable to start checkout.": "チェックアウトを開始できません。",
   "Your name": "あなたの名前",
-  "package": "パッケージ"
+  "package": "パッケージ",
+  "Under $500 USD": "$500 USD未満",
+  "$500 – $1,500 USD": "$500 – $1,500 USD",
+  "$1,500 – $5,000 USD": "$1,500 – $5,000 USD",
+  "$5,000+ USD": "$5,000+ USD"
 }

@@ -610,7 +610,6 @@
   "Trusted by businesses in India and worldwide": "Vertrouwd door bedrijven in India en wereldwijd",
   "Turn search intent": "Verander de zoekintentie",
   "Türkçe": "Turkçe",
-  "Under ₹50,000": "Minder dan ₹ 50.000",
   "Understand demand": "Begrijp de vraag",
   "Up": "Op",
   "Upwork client": "Upwork-klant",
@@ -4103,5 +4102,9 @@
   "Thank you.": "Dank je.",
   "Unable to start checkout.": "Kan het afrekenen niet starten.",
   "Your name": "Jouw naam",
-  "package": "pakket"
+  "package": "pakket",
+  "Under $500 USD": "Minder dan $500 USD",
+  "$500 – $1,500 USD": "$500 – $1,500 USD",
+  "$1,500 – $5,000 USD": "$1,500 – $5,000 USD",
+  "$5,000+ USD": "$5,000+ USD"
 }

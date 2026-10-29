@@ -621,7 +621,6 @@
   "Trusted by businesses in India and worldwide": "Dipercaya oleh bisnis di India dan seluruh dunia",
   "Turn search intent": "Ubah maksud pencarian",
   "Türkçe": "Turki",
-  "Under ₹50,000": "Di bawah ₹50.000",
   "Understand demand": "Pahami permintaan",
   "Up": "Naik",
   "Upwork client": "Klien kerja keras",
@@ -4103,5 +4102,9 @@
   "Thank you.": "Terima kasih.",
   "Unable to start checkout.": "Tidak dapat memulai pembayaran.",
   "Your name": "Namamu",
-  "package": "paket"
+  "package": "paket",
+  "Under $500 USD": "Di bawah $500 USD",
+  "$500 – $1,500 USD": "$500 – $1,500 USD",
+  "$1,500 – $5,000 USD": "$1,500 – $5,000 USD",
+  "$5,000+ USD": "$5,000+ USD"
 }

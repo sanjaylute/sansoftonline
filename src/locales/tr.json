@@ -610,7 +610,6 @@
   "Trusted by businesses in India and worldwide": "Hindistan'daki ve dünya çapındaki işletmelerin güvendiği",
   "Turn search intent": "Arama amacını çevirin",
   "Türkçe": "Türkçe",
-  "Under ₹50,000": "50.000₹'nin altında",
   "Understand demand": "Talebi anlayın",
   "Up": "Yukarı",
   "Upwork client": "Upwork istemcisi",
@@ -4103,5 +4102,9 @@
   "Thank you.": "Teşekkür ederim.",
   "Unable to start checkout.": "Ödeme işlemi başlatılamıyor.",
   "Your name": "Adınız",
-  "package": "paket"
+  "package": "paket",
+  "Under $500 USD": "$500 USD altı",
+  "$500 – $1,500 USD": "$500 – $1,500 USD",
+  "$1,500 – $5,000 USD": "$1,500 – $5,000 USD",
+  "$5,000+ USD": "$5,000+ USD"
 }

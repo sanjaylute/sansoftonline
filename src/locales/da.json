@@ -610,7 +610,6 @@
   "Trusted by businesses in India and worldwide": "Betroet af virksomheder i Indien og over hele verden",
   "Turn search intent": "Drej søgehensigt",
   "Türkçe": "Türkçe",
-  "Under ₹50,000": "Under 50.000 INR",
   "Understand demand": "Forstå efterspørgslen",
   "Up": "Op",
   "Upwork client": "Upwork klient",
@@ -4103,5 +4102,9 @@
   "Thank you.": "Tak.",
   "Unable to start checkout.": "Kunne ikke starte kassen.",
   "Your name": "Dit navn",
-  "package": "pakke"
+  "package": "pakke",
+  "Under $500 USD": "Under $500 USD",
+  "$500 – $1,500 USD": "$500 – $1,500 USD",
+  "$1,500 – $5,000 USD": "$1,500 – $5,000 USD",
+  "$5,000+ USD": "$5,000+ USD"
 }

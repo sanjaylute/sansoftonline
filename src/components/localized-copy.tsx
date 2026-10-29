@@ -30,7 +30,7 @@ export function LocalizedCopy({ locale, children }: { locale: LocalizedLocale; c
         const collect = (node: Node) => {
           if (node.nodeType === Node.TEXT_NODE) {
             const parent = node.parentElement;
-            if (parent && !ignored.has(parent.tagName)) textNodes.push(node as Text);
+            if (parent && !ignored.has(parent.tagName) && !parent.closest('[data-no-translate="true"]')) textNodes.push(node as Text);
           }
           node.childNodes.forEach(collect);
         };
@@ -47,7 +47,7 @@ export function LocalizedCopy({ locale, children }: { locale: LocalizedLocale; c
         if (scope instanceof Element) scope.querySelectorAll<HTMLElement>('[placeholder],[title],[aria-label]').forEach((element) => {
           ['placeholder', 'title', 'aria-label'].forEach((attribute) => {
             const source = element.getAttribute(attribute);
-            if (source && dictionary[source]) element.setAttribute(attribute, dictionary[source]);
+            if (source && !element.closest('[data-no-translate="true"]') && dictionary[source]) element.setAttribute(attribute, dictionary[source]);
           });
         });
       };

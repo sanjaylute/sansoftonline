@@ -27,7 +27,7 @@ export function LanguageSelector() {
   const locale = current && localizedLocales.includes(current as typeof localizedLocales[number]) ? current : 'en';
   const hasTranslation = hasLocalizedPath(path);
 
-  return <label className="language-selector">
+  return <label className="language-selector" data-no-translate="true">
     <select aria-label="Language" value={locale} onChange={(event) => {
       const next = event.target.value;
       const destination = next === 'en'

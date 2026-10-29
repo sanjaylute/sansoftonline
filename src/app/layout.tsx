@@ -6,6 +6,7 @@ import { CookieConsent } from '@/components/cookie-consent';
 import { Analytics } from '@/components/analytics';
 import { SiteStructuredData } from '@/components/structured-data';
 import { LocalizedInternalLinks } from '@/components/localized-internal-links';
+import { WhatsAppChat } from '@/components/whatsapp-chat';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.sansoftonline.com'),
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body>
     <SiteStructuredData />
-    <SiteHeader />{children}<SiteFooter /><LocalizedInternalLinks /><CookieConsent />
+    <SiteHeader />{children}<SiteFooter /><LocalizedInternalLinks /><WhatsAppChat /><CookieConsent />
     <Script id="google-analytics-loader" src="https://www.googletagmanager.com/gtag/js?id=G-0P366CPYJX" strategy="beforeInteractive" />
     <Analytics />
   </body></html>;

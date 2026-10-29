@@ -14,9 +14,13 @@ export const metadata: Metadata = {
   title: 'Sansoft | Digital marketing that moves business forward',
   description: 'SEO, paid media and creative marketing for ambitious businesses. Strategy, execution and measurable growth from Sansoft.',
   icons: {
-    icon: [{ url: '/favicon.png', type: 'image/png', sizes: '384x384' }],
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-48.png', type: 'image/png', sizes: '48x48' },
+      { url: '/favicon.png', type: 'image/png', sizes: '384x384' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: [{ url: '/favicon.png', type: 'image/png', sizes: '180x180' }],
   },
 };
 

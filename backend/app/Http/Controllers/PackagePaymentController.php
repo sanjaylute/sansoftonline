@@ -105,7 +105,15 @@ class PackagePaymentController
         try {
             $token = $this->paypalToken();
             if (!$token) return response()->json(['message' => 'PayPal is not configured.'], 503);
-            $response = Http::withToken($token)->withHeaders(['PayPal-Request-Id' => 'capture-'.$payment->gateway_order_id])->post(rtrim(config('services.paypal.base_url'), '/').'/v2/checkout/orders/'.$payment->gateway_order_id.'/capture');
+            $response = Http::withToken($token)
+                ->acceptJson()
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'PayPal-Request-Id' => 'capture-'.$payment->gateway_order_id,
+                ])
+                ->send('POST', rtrim(config('services.paypal.base_url'), '/').'/v2/checkout/orders/'.$payment->gateway_order_id.'/capture', [
+                    'body' => '{}',
+                ]);
             $capture = $response->json('purchase_units.0.payments.captures.0');
             $expected = number_format($payment->amount_minor, 2, '.', '');
             if (!$response->successful() || $response->json('status') !== 'COMPLETED' || !$capture || ($capture['status'] ?? null) !== 'COMPLETED' || ($capture['amount']['currency_code'] ?? null) !== 'USD' || ($capture['amount']['value'] ?? null) !== $expected) {

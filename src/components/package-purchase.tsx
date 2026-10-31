@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, type FormEvent } from 'react';
-import { ArrowUpRight, Check, LoaderCircle, X } from 'lucide-react';
+import { ArrowUpRight, Building2, Check, CreditCard, LoaderCircle, X } from 'lucide-react';
 import { apiUrl } from '@/lib/api-url';
 
 declare global {
@@ -125,7 +125,8 @@ export function PackagePurchase({ packageName, price, service, custom = false }:
         <span className="package-kicker"><i/>SECURE CHECKOUT</span><h2 id="purchase-title"><span>Purchase</span> {packageName}</h2><p className="purchase-summary">{service} <span>package</span> <strong>{custom ? `${amount} USD` : `${price} USD`}</strong></p>
         <form onSubmit={payRazorpay} className="purchase-form"><label>Your name<input required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}/></label><label>Email address<input required type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}/></label>
           {custom && <><label>Custom amount (USD)<input required type="number" min="1" max="100000" step="1" inputMode="numeric" value={customAmount} onChange={(e) => setCustomAmount(e.target.value)}/></label><label>Service details / comments<textarea required maxLength={2000} value={comments} onChange={(e) => setComments(e.target.value)} placeholder="Tell us what this payment is for."/></label></>}
-          <div className="purchase-gateway-choice"><button type="button" className={gateway === 'razorpay' ? 'selected' : ''} onClick={() => { setGateway('razorpay'); setError(''); }}>Razorpay <small>Cards, UPI & more</small></button><button type="button" className={gateway === 'paypal' ? 'selected' : ''} onClick={() => { setGateway('paypal'); setError(''); }}>PayPal <small>Pay securely with PayPal</small></button></div>
+          <div className={`purchase-gateway-choice${custom ? ' purchase-gateway-single' : ''}`}><button type="button" className={gateway === 'razorpay' ? 'selected' : ''} onClick={() => { setGateway('razorpay'); setError(''); }}>Razorpay <small>Cards, UPI & more</small></button>{!custom && <button type="button" className={gateway === 'paypal' ? 'selected' : ''} onClick={() => { setGateway('paypal'); setError(''); }}>PayPal <small>Pay securely with PayPal</small></button>}</div>
+          <div className="purchase-methods" aria-label="Accepted payment methods: cards, UPI, and bank payments"><CreditCard size={17}/><Building2 size={17}/><span>Cards, UPI & more</span></div>
           {gateway === 'razorpay' ? <button className="purchase-pay" disabled={busy}>{busy && <LoaderCircle size={17} className="purchase-spinner"/>}Continue to Razorpay <ArrowUpRight size={17}/></button> : <div id="paypal-buttons"/>}
         </form>{busy && gateway === 'paypal' && <p className="purchase-loading">Preparing secure checkout…</p>}{error && <p className="purchase-error" role="alert">{error}</p>}<p className="purchase-legal">Payments are processed securely by the selected payment provider.</p>
       </>}

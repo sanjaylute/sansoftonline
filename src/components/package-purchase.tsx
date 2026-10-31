@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowUpRight, Building2, Check, CreditCard, LoaderCircle, X } from 'lucide-react';
 import { apiUrl } from '@/lib/api-url';
 
@@ -45,6 +45,7 @@ export function PackagePurchase({ packageName, price, service, custom = false }:
   const [success, setSuccess] = useState('');
   const [customAmount, setCustomAmount] = useState('');
   const [comments, setComments] = useState('');
+  const paypalCreateOrderFailed = useRef(false);
   const amount = customAmount ? `$${customAmount}` : price;
   const orderDetails = { package: service, tier: packageName, name, email, ...(custom ? { customAmount: Number(customAmount), comments } : {}) };
 
@@ -69,14 +70,16 @@ export function PackagePurchase({ packageName, price, service, custom = false }:
       let activeOrderId: string | undefined;
       await window.paypal.Buttons({
         createOrder: async () => {
-          setError(''); setBusy(true);
+          setError(''); setBusy(true); paypalCreateOrderFailed.current = false;
           try {
+            if (!name.trim()) throw new Error('Enter your name before choosing PayPal.');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) throw new Error('Enter a valid email address before choosing PayPal.');
             if (custom && (!customAmount || !comments.trim())) throw new Error('Enter the custom amount and service details before paying.');
             const response = await fetch(`${api}/payments/paypal/order`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(orderDetails) });
             const data = await response.json(); if (!response.ok) throw new Error(data.message || 'Could not start PayPal checkout.');
             activeOrderId = data.orderId;
             return data.orderId;
-          } catch (e) { setError(checkoutError(e)); throw e; }
+          } catch (e) { paypalCreateOrderFailed.current = true; setError(checkoutError(e)); throw e; }
           finally { setBusy(false); }
         },
         onApprove: async (data: { orderID: string }) => {
@@ -89,7 +92,10 @@ export function PackagePurchase({ packageName, price, service, custom = false }:
           finally { setBusy(false); }
         },
         onCancel: (data: { orderID?: string }) => { void reportFailure('paypal', data.orderID || activeOrderId, 'Checkout was cancelled before payment.'); },
-        onError: () => { void reportFailure('paypal', activeOrderId, 'PayPal could not complete the payment.'); setError('PayPal could not complete the payment. Please try again.'); },
+        onError: () => {
+          if (!paypalCreateOrderFailed.current) setError('PayPal could not complete the payment. Please try again.');
+          void reportFailure('paypal', activeOrderId, 'PayPal could not complete the payment.');
+        },
       }).render(target);
     })();
     return () => { cancelled = true; };

@@ -22,7 +22,12 @@ class PackagePaymentController
 
     public function config(): JsonResponse
     {
-        return response()->json(['paypalClientId' => config('services.paypal.client_id')]);
+        $baseUrl = (string) config('services.paypal.base_url');
+
+        return response()->json([
+            'paypalClientId' => config('services.paypal.client_id'),
+            'paypalEnvironment' => str_contains($baseUrl, 'sandbox.paypal.com') ? 'sandbox' : 'live',
+        ]);
     }
 
     public function razorpayOrder(Request $request): JsonResponse
@@ -103,8 +108,8 @@ class PackagePaymentController
             $response = Http::withToken($token)->withHeaders(['PayPal-Request-Id' => 'capture-'.$payment->gateway_order_id])->post(rtrim(config('services.paypal.base_url'), '/').'/v2/checkout/orders/'.$payment->gateway_order_id.'/capture');
             $capture = $response->json('purchase_units.0.payments.captures.0');
             $expected = number_format($payment->amount_minor, 2, '.', '');
-            if (!$response->successful() || $response->json('status') !== 'COMPLETED' || !$capture || $capture['status'] !== 'COMPLETED' || $capture['amount']['currency_code'] !== 'USD' || $capture['amount']['value'] !== $expected) {
-                $this->markFailed($payment, 'PayPal capture could not be confirmed.', $response->json());
+            if (!$response->successful() || $response->json('status') !== 'COMPLETED' || !$capture || ($capture['status'] ?? null) !== 'COMPLETED' || ($capture['amount']['currency_code'] ?? null) !== 'USD' || ($capture['amount']['value'] ?? null) !== $expected) {
+                $this->markFailed($payment, $this->paypalCaptureFailureReason($response, $capture, $expected), $response->json());
                 return response()->json(['message' => 'PayPal payment could not be confirmed. Please contact Sansoft if the charge appears on your account.'], 422);
             }
             $updated = DB::table('package_payments')->where('id', $payment->id)->where('status', '!=', 'paid')->update([
@@ -166,6 +171,22 @@ class PackagePaymentController
             'updated_at' => now(),
         ]);
         if ($updated) $this->sendPaymentEmail($payment, 'failed', null, $reason);
+    }
+
+    private function paypalCaptureFailureReason($response, ?array $capture, string $expected): string
+    {
+        $details = array_filter([
+            'HTTP '.$response->status(),
+            'order_status='.$response->json('status'),
+            'paypal_error='.$response->json('name'),
+            'paypal_message='.$response->json('message'),
+            'debug_id='.$response->json('debug_id'),
+            'capture_status='.($capture['status'] ?? 'missing'),
+            'capture_amount='.($capture['amount']['value'] ?? 'missing'),
+            'expected_amount='.$expected,
+        ], static fn ($value): bool => !str_ends_with((string) $value, '='));
+
+        return 'PayPal capture could not be confirmed. '.implode('; ', $details);
     }
 
     private function sendPaymentEmail(object $payment, string $status, ?string $transactionId = null, ?string $reason = null): void

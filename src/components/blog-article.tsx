@@ -36,8 +36,8 @@ export function BlogArticle({ post }: { post: BlogPost }) {
     <div className="journal-wrap article-photo-wrap"><figure className="article-photo"><img src={post.image} alt={post.imageAlt}/><figcaption>{post.imageAlt}</figcaption></figure></div>
     <section className="journal-wrap article-layout"><aside className="article-aside"><span>IN THIS ARTICLE</span><p>{post.title}</p><Link href="/request-quote/">Talk to Sansoft <ArrowUpRight size={15}/></Link></aside>
       <article className="article-reading"><p className="article-lead">{post.paragraphs[0]}</p>
-        {post.sections ? post.sections.map(section=><section key={section.heading}><h2>{section.heading}</h2><p>{section.content}</p></section>) : post.paragraphs.slice(1).map((paragraph,index)=><section key={paragraph}><h2>{articleSubhead(post,index)}</h2><p>{paragraph}</p></section>)}
-        <div className="article-callout"><span>THE TAKEAWAY</span><p>Build around what your customers need, keep the details clear and use what you learn to make the next improvement count.</p></div>
+        {post.sections ? post.sections.map(section=><section key={section.heading}><h2>{section.heading}</h2>{section.content.split("\n\n").map(paragraph=><p key={paragraph}>{paragraph}</p>)}{section.links && <ul>{section.links.map(link=><li key={link.href}><Link href={link.href}>{link.label}</Link></li>)}</ul>}</section>) : post.paragraphs.slice(1).map((paragraph,index)=><section key={paragraph}><h2>{articleSubhead(post,index)}</h2><p>{paragraph}</p></section>)}
+        <div className="article-callout"><span>THE TAKEAWAY</span><p>{post.takeaway ?? "Build around what your customers need, keep the details clear and use what you learn to make the next improvement count."}</p></div>
         {post.cta && <Link href={post.cta.href} className="article-service-cta">{post.cta.label} <ArrowUpRight size={16}/></Link>}
         <Link href="/blog/" className="article-back-bottom"><ArrowLeft size={16}/>Back to all insights</Link>
       </article>

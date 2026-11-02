@@ -7,12 +7,134 @@ export type BlogPost = {
   image: string;
   imageAlt: string;
   paragraphs: string[];
-  sections?: { heading: string; content: string }[];
+  sections?: { heading: string; content: string; links?: { label: string; href: string }[] }[];
+  takeaway?: string;
   cta?: { label: string; href: string };
 };
 
 // Keep the established WordPress article slugs so the rebuilt blog preserves its URLs.
 export const blogPosts: BlogPost[] = [
+{
+  "slug": "how-to-choose-an-seo-service-provider",
+  "category": "SEO guides",
+  "title": "How to Choose an SEO Service Provider: 12 Questions to Ask Before Hiring",
+  "excerpt": "Choosing an SEO service provider? Ask these 12 questions about strategy, costs, reporting, results and ownership before hiring an SEO agency.",
+  "date": "November 2, 2026",
+  "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1500&q=85",
+  "imageAlt": "Business team discussing a marketing proposal and campaign responsibilities",
+  "paragraphs": [
+    "Hiring an SEO service provider means trusting someone with your website, marketing budget and part of your business’s growth. Before signing a proposal, understand what the provider will do, how they will measure progress and what your team needs to contribute. Choose a provider by comparing their understanding of your business, proposed work, evidence of results, reporting and contract terms."
+  ],
+  "takeaway": "Choose an SEO provider whose plan you can understand, whose work you can verify and whose responsibilities are clear. Agree on business goals, deliverables, reporting, costs and ownership before signing.",
+  "sections": [
+    {
+      "heading": "1. How will you connect SEO to our business goals?",
+      "content": "Start with what your business needs: qualified enquiries, product sales, appointments or customers in a particular service area. Ask how the strategy supports that outcome. A commercial solar installer, for example, needs to reach business buyers; visits from people researching household gadgets may have little commercial value.\n\nA useful proposal identifies priority customers, services, target areas and conversion actions. Listen for questions about your sales process and capacity. Those answers should shape the campaign.",
+      "links": [
+        {
+          "label": "Explore Sansoft’s SEO services",
+          "href": "/seo-services/"
+        }
+      ]
+    },
+    {
+      "heading": "2. What will you review before recommending a strategy?",
+      "content": "Ask how the provider will establish your website’s starting position. Their review may cover search performance, important landing pages, technical problems, competitors, content gaps and conversion tracking. Its depth should match your website and engagement.\n\nRequest an example of how an audit finding becomes an action. A useful recommendation identifies affected URLs, explains the issue and assigns a next step. Clarify whether the audit includes implementation, recommendations or both.",
+      "links": [
+        {
+          "label": "Understand technical SEO services",
+          "href": "/technical-seo-services/"
+        }
+      ]
+    },
+    {
+      "heading": "3. How will you choose keywords and target pages?",
+      "content": "Ask the provider to explain potential keyword opportunities and which pages should serve them. This may mean improving a service page, building a useful location page or answering a detailed buying question. The choice should reflect whether the searcher is learning, comparing or ready to enquire.\n\nAsk: “Which three pages would you investigate first, and what would you need to learn before changing them?” The answer reveals how the provider makes decisions, rather than simply how many keywords they promise to track."
+    },
+    {
+      "heading": "4. What exactly is included in your SEO service?",
+      "content": "Get the scope in writing. Broad descriptions such as “complete SEO” leave too much open to interpretation. Ask about technical fixes, page optimization, content, internal links, local listings, outreach and reporting. Establish the quantity, responsibility and approval process for relevant activities.\n\nTwo proposals can look similar while offering different levels of service. One may include implementing website improvements; another may provide recommendations that require a separate developer. Compare equivalent work before comparing fees.",
+      "links": [
+        {
+          "label": "Read the small business SEO services checklist",
+          "href": "/what-do-seo-services-include-small-business-buyers-checklist/"
+        }
+      ]
+    },
+    {
+      "heading": "5. Who will implement website changes?",
+      "content": "Find out who makes website changes and who checks them afterwards. Some providers have developers and content specialists; others work with your team. Either arrangement can work when responsibilities are clear.\n\nAsk whether development is included, who approves copy, how significant changes are tested and what happens if a change causes a problem. Check experience with your platform too: a custom website, WordPress site and Shopify store can require different implementation approaches."
+    },
+    {
+      "heading": "6. Can you show relevant results and explain the work behind them?",
+      "content": "Request examples involving a similar business model, website type or customer market. A useful case study explains the starting position, work completed, timeframe and business outcome. A ranking screenshot provides only a small part of that picture.\n\nAn increase in enquiries is easier to assess when you know whether the client also launched services, changed advertising or expanded locations. Where possible, request a reference and ask about communication and delivery. Treat examples as evidence of an approach, rather than a forecast for your website."
+    },
+    {
+      "heading": "7. What results can we reasonably expect, and when?",
+      "content": "Separate delivery milestones from performance expectations. A provider can commit to completing agreed work by a date. Rankings and customer demand involve factors beyond their control. Discuss your starting position, competition, budget and implementation speed, then agree when the strategy will be reviewed if progress falls short.\n\nBe cautious about guaranteed first-place rankings. Google’s guidance on hiring an SEO warns against that promise. Ask for assumptions and review points instead of a fixed ranking deadline.",
+      "links": [
+        {
+          "label": "Read Google’s guidance on hiring an SEO",
+          "href": "https://developers.google.com/search/docs/fundamentals/do-i-need-seo"
+        }
+      ]
+    },
+    {
+      "heading": "8. How will you measure and report progress?",
+      "content": "Request a sample report before signing. You should understand what happened, what work was completed and what comes next. Depending on your business, reporting may cover organic enquiries or sales, relevant landing-page traffic, search visibility and agreed tasks.\n\nAsk whether branded searches are separated from searches by people who have not heard of your company. Establish who configures and checks conversion tracking. More visitors alone will leave an important question unanswered if you cannot tell whether those visits led to useful enquiries or sales."
+    },
+    {
+      "heading": "9. How do you approach link building?",
+      "content": "Ask for the methods used and examples of websites approached. Discuss how the provider assesses relevance, what content or outreach is involved and how paid placements are disclosed. Scrutinize large monthly link quotas when the provider cannot explain the sources.\n\nAn industry association listing or relevant trade publication mention has a clearer business context than a batch of unrelated website links. Request visibility into the work so you can assess sources and understand what is being done in your business’s name.",
+      "links": [
+        {
+          "label": "Explore off-page SEO services",
+          "href": "/off-page-seo-services/"
+        }
+      ]
+    },
+    {
+      "heading": "10. Who will own our accounts, content and campaign assets?",
+      "content": "Clarify ownership before granting access. The agreement should explain who controls the domain, website, analytics accounts, Search Console property, business listings and commissioned content. Use individual account invitations and appropriate permissions where possible, keeping a record of access.\n\nAsk what you receive when the engagement ends: reports, keyword research, content files, documentation and a handover of outstanding work. A clear exit process makes the relationship easier to manage from the start."
+    },
+    {
+      "heading": "11. What are the total costs and contract terms?",
+      "content": "Request the full cost, including setup fees and likely additional expenses. Check whether content, development, reporting tools and other discussed activities are included. Establish how extra work is approved.\n\nReview the minimum term, payment schedule, notice period, cancellation conditions and treatment of unfinished work. A lower monthly fee may require substantial spending elsewhere. Evaluate the total resources needed to deliver the plan.",
+      "links": [
+        {
+          "label": "Compare Sansoft’s SEO packages",
+          "href": "/seo-packages/"
+        },
+        {
+          "label": "Understand the structure of professional SEO packages",
+          "href": "/understanding-the-structure-of-professional-seo-packages/"
+        }
+      ]
+    },
+    {
+      "heading": "12. Who will manage our campaign and communicate with us?",
+      "content": "Find out who handles the work after the sales conversation ends. Ask who your main contact will be, how often you will meet and how urgent issues are handled. Agree how approvals are recorded and what happens when your team cannot respond immediately.\n\nYou should also know how performance changes will be explained. Useful updates distinguish confirmed findings from possible explanations and identify the next investigation or action. Clear communication keeps both sides involved and work moving."
+    },
+    {
+      "heading": "Your checklist for comparing SEO providers",
+      "content": "Record the same details after each conversation: business goals; starting review; keyword and page strategy; deliverables and exclusions; implementation responsibilities; relevant evidence; expectations and review dates; reporting; link methods; ownership; total costs; and communication arrangements.\n\nIf an answer is vague, ask for clarification before signing. Your aim is to understand the service well enough to judge whether it fits your business, resources and decision-making process."
+    },
+    {
+      "heading": "Choosing an SEO partner for your business",
+      "content": "The right provider should make it easier to understand opportunities, approve work and evaluate progress. Look for a clear plan, defined responsibilities and evidence you can assess.\n\nShare your website, target customers and business priorities with Sansoft so we can discuss the work your campaign may need. You can also email sales@sansoftonline.com to discuss your SEO requirements.",
+      "links": [
+        {
+          "label": "Discuss your SEO requirements with Sansoft",
+          "href": "/request-quote/"
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "label": "Talk to Sansoft about your SEO goals",
+    "href": "/seo-services/"
+  }
+},
   {
     slug: 'what-do-seo-services-include-small-business-buyers-checklist', category: 'SEO guides',
     title: 'What Do SEO Services Include? A Small Business Buyer’s Checklist',

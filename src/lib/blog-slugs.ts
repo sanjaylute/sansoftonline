@@ -1,4 +1,5 @@
 export const blogPostSlugs = new Set([
+  'how-to-choose-an-seo-service-provider',
   'what-do-seo-services-include-small-business-buyers-checklist',
   'top-10-free-seo-and-ai-seo-tools-for-better-visibility',
   'top-10-seo-reporting-tools-and-agency-dashboards',

@@ -1,4 +1,5 @@
 .journal-article-page{--journal-ink:#211d1a;--journal-muted:#756b62;--journal-orange:#ef7600;--journal-paper:#faf6f0;--journal-line:#e9ded1;color:var(--journal-ink);background:var(--journal-paper)}
+.article-reading section ul{padding-left:22px;margin:0 0 23px;color:#514941;font-size:inherit;line-height:1.75}.article-reading section li+li{margin-top:8px}.article-reading section a{color:#964300;text-decoration:underline;text-underline-offset:3px}.article-reading section a:hover{color:#211d1a}.article-reading section a:focus-visible{outline:2px solid #964300;outline-offset:4px}
 .article-masthead{padding:42px 0 57px;background:#fcf8f2}
 .article-back{display:inline-flex;align-items:center;gap:9px;margin-bottom:44px;color:#756b62;font-size:14px;font-weight:700;text-decoration:none}
 .article-masthead .journal-kicker{margin-bottom:23px}

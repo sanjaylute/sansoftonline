@@ -19,7 +19,7 @@ class BlogSocialPublisher
      *
      * @return array{published:int,skipped:int,failed:int}
      */
-    public function sync(): array
+    public function sync(?string $onlyUrl = null): array
     {
         if (! $this->isConfigured()) {
             throw new RuntimeException('BUFFER_API_KEY is not configured.');
@@ -31,6 +31,14 @@ class BlogSocialPublisher
 
         if (! is_array($posts)) {
             throw new RuntimeException('The Sansoft blog feed did not return a post list.');
+        }
+
+        if ($onlyUrl !== null) {
+            $posts = array_values(array_filter($posts, fn ($post): bool => is_array($post) && ($post['url'] ?? null) === $onlyUrl));
+
+            if ($posts === []) {
+                throw new RuntimeException('The requested article was not found in the public Sansoft blog feed.');
+            }
         }
 
         $channels = $this->channels();

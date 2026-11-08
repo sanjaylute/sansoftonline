@@ -9,7 +9,7 @@ class ShowSocialPublicationStatus extends Command
 {
     protected $signature = 'social:publication-status {url? : Optional article URL to inspect}';
 
-    protected $description = 'Show social publishing status and errors for Sansoft articles';
+    protected $description = 'Show Buffer publishing status and errors for Sansoft articles';
 
     public function handle(): int
     {
@@ -28,7 +28,7 @@ class ShowSocialPublicationStatus extends Command
         }
 
         $this->table(
-            ['Channel', 'Status', 'Social post ID', 'Published', 'Error'],
+            ['Channel', 'Status', 'Buffer post', 'Published', 'Error'],
             $publications->map(fn (SocialPublication $publication) => [
                 $publication->channel_service,
                 $publication->status,

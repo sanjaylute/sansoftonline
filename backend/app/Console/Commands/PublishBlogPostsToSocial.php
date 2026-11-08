@@ -9,7 +9,7 @@ class PublishBlogPostsToSocial extends Command
 {
     protected $signature = 'social:publish-blogs';
 
-    protected $description = 'Publish new Sansoft blog posts to connected social channels';
+    protected $description = 'Publish new Sansoft blog posts to connected Buffer channels';
 
     public function handle(BlogSocialPublisher $publisher): int
     {

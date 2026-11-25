@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { services, serviceHref } from '@/lib/content';
 import { remainingPages } from '@/lib/remaining-page-data';
-import { blogPosts } from '@/lib/blog-data';
+import { publishedBlogPosts } from '@/lib/blog-data';
 import { languageAlternates, localizedHref, localizedLocales, localizedPublicPaths, normalizeLocalizedPath } from '@/lib/localized-pages';
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/social-media-ads-packages/', '/social-media-posts-design-packages/', '/custom-service/',
     ...services.map((service) => serviceHref(service.slug)),
     ...remainingPages.map((page) => `/${page.slug}/`),
-    ...blogPosts.map((post) => `/${post.slug}/`),
+    ...publishedBlogPosts().map((post) => `/${post.slug}/`),
   ]));
 
   const localizedPathSet = new Set<string>(localizedPublicPaths);

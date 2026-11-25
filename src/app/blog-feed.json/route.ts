@@ -1,12 +1,12 @@
-import { blogPosts } from '@/lib/blog-data';
+import { publishedBlogPosts } from '@/lib/blog-data';
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 export function GET() {
   const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sansoftonline.com').replace(/\/$/, '');
 
   return Response.json({
-    posts: blogPosts.map((post) => ({
+    posts: publishedBlogPosts().map((post) => ({
       slug: post.slug,
       title: post.title,
       excerpt: post.excerpt,

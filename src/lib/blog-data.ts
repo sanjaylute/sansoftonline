@@ -1,9 +1,13 @@
+import { scheduledBlogPosts } from './scheduled-blog-posts';
+
 export type BlogPost = {
   slug: string;
   category: string;
   title: string;
   excerpt: string;
   date: string;
+  /** ISO timestamp used to keep scheduled articles private until publication. */
+  publishAt?: string;
   image: string;
   imageAlt: string;
   paragraphs: string[];
@@ -14,6 +18,7 @@ export type BlogPost = {
 
 // Keep the established WordPress article slugs so the rebuilt blog preserves its URLs.
 export const blogPosts: BlogPost[] = [
+  ...scheduledBlogPosts,
 {
   "slug": "how-to-choose-an-seo-service-provider",
   "category": "SEO guides",
@@ -302,3 +307,11 @@ export const blogPosts: BlogPost[] = [
     ],
   },
 ];
+
+export function isPublishedBlogPost(post: BlogPost, now = new Date()) {
+  return !post.publishAt || new Date(post.publishAt).getTime() <= now.getTime();
+}
+
+export function publishedBlogPosts(now = new Date()) {
+  return blogPosts.filter(post => isPublishedBlogPost(post, now));
+}

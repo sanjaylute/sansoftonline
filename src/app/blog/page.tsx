@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { ArrowUpRight, CalendarDays, MoveRight } from 'lucide-react';
-import { blogPosts } from '@/lib/blog-data';
+import { publishedBlogPosts } from '@/lib/blog-data';
 import './blog-pages.css';
 import { livePageMetadata } from "@/lib/live-seo-metadata";
 
 export const metadata = livePageMetadata("blog");
+export const dynamic = 'force-dynamic';
 
 export default function BlogPage() {
-  const [featured, ...articles] = blogPosts;
+  const [featured, ...articles] = publishedBlogPosts();
   return <main className="journal-page">
     <section className="journal-intro"><div className="journal-wrap">
       <div className="journal-kicker"><i/>SANSOFT JOURNAL <span>·</span> IDEAS FOR WHAT’S NEXT</div>

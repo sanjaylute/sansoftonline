@@ -4,13 +4,14 @@ import type { Metadata } from 'next';
 import { ArrowRight, ArrowUpRight, Check, Sparkles } from 'lucide-react';
 import { getRemainingPage, getServiceDeliverables, remainingPages } from '@/lib/remaining-page-data';
 import { BlogArticle, blogPostMetadata, findBlogPost } from '@/components/blog-article';
-import { blogPosts } from '@/lib/blog-data';
+import { publishedBlogPosts } from '@/lib/blog-data';
 import { livePageMetadata, livePostMetadata } from '@/lib/live-seo-metadata';
 import './remaining-page.css';
 import '../blog/blog-pages.css';
 import '../../components/blog-article.css';
 
-export function generateStaticParams(){return [...remainingPages.filter(page=>!['local-seo-services','sitemap','our-portfolio'].includes(page.slug)).map(page=>({slug:page.slug})),...blogPosts.map(post=>({slug:post.slug}))];}
+export const dynamic = 'force-dynamic';
+export function generateStaticParams(){return [...remainingPages.filter(page=>!['local-seo-services','sitemap','our-portfolio'].includes(page.slug)).map(page=>({slug:page.slug})),...publishedBlogPosts().map(post=>({slug:post.slug}))];}
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params;const post=findBlogPost(slug);if(post){const live=livePostMetadata(slug);return live.title?live:blogPostMetadata(post);}const live=livePageMetadata(slug);if(live.title)return live;const page=getRemainingPage(slug);if(!page)return {};return {title:`${page.title} | Sansoft`,description:page.description,keywords:[page.title,page.category,'Sansoft'],alternates:{canonical:`/${slug}/`}};}
 
 const photos=[
